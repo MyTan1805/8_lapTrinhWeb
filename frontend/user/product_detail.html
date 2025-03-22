@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sản phẩm - Mỹ phẩm Việt Nam</title>
+  <link rel="stylesheet" href="../assets/css/user.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>Mỹ phẩm Việt Nam</h1>
+      <nav>
+        <a href="index.html">Trang chủ</a>
+        <a href="products.html">Sản phẩm</a>
+        <a href="cart.html">Giỏ hàng</a>
+        <a href="account.html">Tài khoản</a>
+        <a href="contact.html">Liên hệ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Chi tiết sản phẩm -->
+  <section class="product-detail">
+    <div class="container">
+      <div class="product-info">
+        <img id="product-image" src="" alt="Sản phẩm">
+        <div class="product-details">
+          <h2 id="product-name"></h2>
+          <p id="product-price"></p>
+          <p id="product-description"></p>
+          <button onclick="addToCart()">Thêm vào giỏ hàng</button>
+        </div>
+      </div>
+      <!-- Đánh giá -->
+      <div class="reviews">
+        <h3>Đánh giá sản phẩm</h3>
+        <div id="review-list"></div>
+        <form id="review-form">
+          <textarea placeholder="Viết đánh giá của bạn"></textarea>
+          <button type="submit">Gửi đánh giá</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Mỹ phẩm Việt Nam. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/user.js"></script>
+</body>
+</html>
