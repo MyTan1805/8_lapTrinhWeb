@@ -7,34 +7,162 @@
   <link rel="stylesheet" href="../assets/css/user.css">
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="container">
-      <h1>Mỹ phẩm Việt Nam</h1>
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="Logo" class="header-logo">
+      </div>
       <nav>
         <a href="index.html">Trang chủ</a>
-        <a href="products.html">Sản phẩm</a>
-        <a href="cart.html">Giỏ hàng</a>
-        <a href="account.html">Tài khoản</a>
+        <div class="dropdown">
+          <a href="products.html" class="active">Sản phẩm 
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="2"/>
+            </svg>
+          </a>
+          <div class="dropdown-content">
+            <a href="#">Kem chống nắng</a>
+            <a href="#">Sữa rửa mặt</a>
+            <a href="#">Son môi</a>
+          </div>
+        </div>
         <a href="contact.html">Liên hệ</a>
+        <a href="about.html">About Us</a>
+        <a href="account.html">Tài khoản</a>
       </nav>
     </div>
   </header>
 
-  <!-- Danh mục sản phẩm -->
-  <section class="products">
-    <div class="container">
-      <h2>Tất cả sản phẩm</h2>
-      <div class="product-grid" id="product-list">
-        <!-- Sản phẩm sẽ được thêm bằng JS từ API -->
+  <main>
+    <section class="search-filter">
+      <div class="container">
+        <div class="search-bar">
+          <input type="text" placeholder="Tìm sản phẩm" class="search-input">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 19L13.5 13.5M15 8.5C15 12.0899 12.0899 15 8.5 15C4.91015 15 2 12.0899 2 8.5C2 4.91015 4.91015 2 8.5 2C12.0899 2 15 4.91015 15 8.5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="sort-filter">
+          <select>
+            <option value="price-asc">Giá: Thấp đến cao</option>
+            <option value="price-desc">Giá: Cao đến thấp</option>
+            <option value="name-asc">Tên: A đến Z</option>
+            <option value="name-desc">Tên: Z đến A</option>
+          </select>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
+    <section class="products-section">
+      <div class="container">
+        <div class="products-wrapper">
+          <div class="products-sidebar">
+            <h3>Danh mục</h3>
+            <div class="category-tags">
+              <label><input type="checkbox" name="category" value="sunscreen"> Kem chống nắng</label>
+              <label><input type="checkbox" name="category" value="facewash"> Sữa rửa mặt</label>
+              <label><input type="checkbox" name="category" value="lipstick"> Son môi</label>
+              <label><input type="checkbox" name="category" value="moisturizer"> Kem dưỡng ẩm</label>
+            </div>
+            <h3>Khoảng giá</h3>
+            <div class="price-filter">
+              <input type="number" placeholder="Từ" class="price-input">
+              <span>-</span>
+              <input type="number" placeholder="Đến" class="price-input">
+            </div>
+          </div>
+
+          <div class="products-grid">
+            <div class="product-list">
+              <a href="product_detail.html?id=1" class="product-item">
+                <div class="product-image">
+                  <img src="../assets/images/products/product1.jpg" alt="Sản phẩm 1">
+                  <span class="product-label discount">-16%</span>
+                </div>
+                <div class="product-info">
+                  <div class="product-rating">
+                    <span class="stars">★★★★★</span> (18)
+                  </div>
+                  <h4>Kem dưỡng ẩm cao cấp</h4>
+                  <div class="product-price">
+                    <span class="current-price">420.000 đ</span>
+                    <span class="original-price">500.000 đ</span>
+                  </div>
+                </div>
+              </a>
+              <a href="product_detail.html?id=2" class="product-item">
+                <div class="product-image">
+                  <img src="../assets/images/products/product2.jpg" alt="Sản phẩm 2">
+                  <span class="product-label new">New</span>
+                </div>
+                <div class="product-info">
+                  <div class="product-rating">
+                    <span class="stars">★★★★☆</span> (12)
+                  </div>
+                  <h4>Sữa rửa mặt dịu nhẹ</h4>
+                  <div class="product-price">
+                    <span class="current-price">150.000 đ</span>
+                  </div>
+                </div>
+              </a>
+              <a href="product_detail.html?id=3" class="product-item">
+                <div class="product-image">
+                  <img src="../assets/images/products/product3.jpg" alt="Sản phẩm 3">
+                </div>
+                <div class="product-info">
+                  <div class="product-rating">
+                    <span class="stars">★★★★★</span> (20)
+                  </div>
+                  <h4>Son môi lâu trôi</h4>
+                  <div class="product-price">
+                    <span class="current-price">300.000 đ</span>
+                  </div>
+                </div>
+              </a>
+              <a href="product_detail.html?id=4" class="product-item">
+                <div class="product-image">
+                  <img src="../assets/images/products/product4.jpg" alt="Sản phẩm 4">
+                </div>
+                <div class="product-info">
+                  <div class="product-rating">
+                    <span class="stars">★★★★☆</span> (15)
+                  </div>
+                  <h4>Kem chống nắng SPF50</h4>
+                  <div class="product-price">
+                    <span class="current-price">250.000 đ</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="pagination">
+              <button class="prev-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4L6 10L12 16" stroke="#333333" stroke-width="2"/>
+                </svg>
+              </button>
+              <button class="next-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 4L14 10L8 16" stroke="#333333" stroke-width="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer>
     <div class="container">
-      <p>&copy; 2025 Mỹ phẩm Việt Nam. All rights reserved.</p>
+      <div class="footer-left">
+        <img src="../assets/images/logo.png" alt="Logo" class="footer-logo">
+        <nav>
+          <a href="products.html">Sản phẩm</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <p>Copyright © 2021 Company Name</p>
     </div>
   </footer>
 
