@@ -13,8 +13,8 @@
       <h2>ADMIN PANEL</h2>
     </div>
     <nav class="sidebar-nav">
-      
-      <a href="products_Mangement.html" class="nav-item active">
+
+      <a href="/" class="nav-item active">
         <span class="nav-icon">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
@@ -28,8 +28,8 @@
         </span>
       </a>
       <div class="sub-menu">
-        <a href="products_Mangement.html" class="sub-item">Tất cả sản phẩm</a>
-        <a href="add_product.html" class="sub-item active">Thêm sản phẩm</a>
+        <a href="/" class="sub-item">Tất cả sản phẩm</a>
+        <a href="add_product" class="sub-item active">Thêm sản phẩm</a>
         <a href="categories.html" class="sub-item">Danh mục</a>
       </div>
       <a href="orders.html" class="nav-item">
@@ -40,7 +40,7 @@
         </span>
         Đơn hàng
       </a>
-      
+
       <a href="users.html" class="nav-item">
         <span class="nav-icon">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +49,7 @@
         </span>
         Người dùng
       </a>
-      
+
     </nav>
   </aside>
 
@@ -58,48 +58,64 @@
     <div class="container">
       <div class="page-header">
         <h1>Thêm sản phẩm mới</h1>
-        <a href="products.html" class="btn btn-secondary">Quay lại danh sách</a>
+        <a href="/" class="btn btn-secondary">Quay lại danh sách</a>
       </div>
-      <form class="add-product-form">
+      <form class="add-product-form" enctype="multipart/form-data">
         <div class="form-row">
           <div class="form-group">
             <label for="product-name">Tên sản phẩm <span class="required">*</span></label>
-            <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm" required>
+            <input type="text" id="product-name" name="ten" placeholder="Nhập tên sản phẩm" required>
           </div>
           <div class="form-group">
             <label for="product-description">Mô tả <span class="required">*</span></label>
-            <textarea id="product-description" name="product-description" placeholder="Nhập mô tả sản phẩm chi tiết" required></textarea>
+            <textarea id="product-description" name="moTa" placeholder="Nhập mô tả sản phẩm chi tiết" required></textarea>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-category">Danh mục <span class="required">*</span></label>
-            <select id="product-category" name="product-category" required>
+            <select id="product-category" name="loai" required>
               <option value="">Chọn danh mục</option>
-              <option value="cham-soc-da">Chăm sóc da</option>
-              <option value="trang-diem">Trang điểm</option>
-              <option value="cham-soc-toc">Chăm sóc tóc</option>
+              <option value="Serum">Serum</option>
+              <option value="Kem Chống Nắng">Kem Chống Nắng</option>
+              <option value="Sữa Rửa Mặt">Sữa Rửa Mặt</option>
+              <option value="Toner">Toner</option>
+              <option value="Kem Dưỡng">Kem Dưỡng</option>
+              <option value="Tinh Chất">Tinh Chất</option>
+              <option value="Tẩy Tế Bào Chết">Tẩy Tế Bào Chết</option>
+              <option value="Xịt Khoáng">Xịt Khoáng</option>
+              <option value="Tẩy Trang">Tẩy Trang</option>
+              <option value="Kem Dưỡng Mắt">Kem Dưỡng Mắt</option>
+              <option value="Mặt Nạ Ngủ">Mặt Nạ Ngủ</option>
+              <option value="Gel Dưỡng">Gel Dưỡng</option>
+              <option value="Bộ Dưỡng Da">Bộ Dưỡng Da</option>
+              <option value="Mặt Nạ">Mặt Nạ</option>
+              <option value="Sữa Tắm">Sữa Tắm</option>
+              <option value="Dầu Dưỡng">Dầu Dưỡng</option>
+              <option value="Tinh Dầu">Tinh Dầu</option>
+              <option value="Gel Trị Mụn">Gel Trị Mụn</option>
+              <option value="Kem Lót">Kem Lót</option>
             </select>
           </div>
           <div class="form-group">
             <label for="product-brand">Thương hiệu <span class="required">*</span></label>
-            <input type="text" id="product-brand" name="product-brand" placeholder="Nhập thương hiệu" required>
+            <input type="text" id="product-brand" name="thuongHieu" placeholder="Nhập thương hiệu" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-origin">Nơi sản xuất <span class="required">*</span></label>
-            <input type="text" id="product-origin" name="product-origin" placeholder="Nhập nơi sản xuất" required>
+            <input type="text" id="product-origin" name="noiSanXuat" placeholder="Nhập nơi sản xuất" required>
           </div>
           <div class="form-group">
             <label for="product-stock">Số lượng tồn kho <span class="required">*</span></label>
-            <input type="number" id="product-stock" name="product-stock" placeholder="0" min="0" required>
+            <input type="number" id="product-stock" name="soLuong" placeholder="0" min="0" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-price">Giá <span class="required">*</span></label>
-            <input type="number" id="product-price" name="product-price" placeholder="0" min="0" required>
+            <input type="number" id="product-price" name="gia" placeholder="0" min="0" required>
             <small>Đề nghị không khuyến mãi</small>
           </div>
           <div class="form-group">
@@ -111,7 +127,7 @@
           </div>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href='products.html'">Hủy</button>
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management.html'">Hủy</button>
           <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
         </div>
       </form>

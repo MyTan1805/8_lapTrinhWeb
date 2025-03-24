@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý sản phẩm - Admin Panel</title>
+  <link rel="stylesheet" href="../../assets/css/admin.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>ADMIN PANEL</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="products_Management.html" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Sản phẩm
+        <span class="nav-arrow">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </a>
+      <div class="sub-menu">
+        <a href="/"class="sub-item active">Tất cả sản phẩm</a>
+        <a href="add_product" class="sub-item">Thêm sản phẩm</a>
+        <a href="categories.html" class="sub-item">Danh mục</a>
+      </div>
+      <a href="orders.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5ZM7 5V3H13V5" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Đơn hàng
+      </a>
+      <a href="users.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10C12.2091 10 14 8.20914 14 6C14 3.79086 12.2091 2 10 2C7.79086 2 6 3.79086 6 6C6 8.20914 7.79086 10 10 10ZM4 18H16C16 14.6863 13.3137 12 10 12C6.68629 12 4 14.6863 4 18Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Người dùng
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h1>Quản lý sản phẩm</h1>
+        <div class="header-actions">
+          <a href="../user/index.html" class="btn btn-secondary">Trở về trang chủ</a>
+          <a href="add_product" class="btn btn-primary">+ Thêm sản phẩm</a>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+        <span class="search-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 16C12.866 16 16 12.866 16 9C16 5.13401 12.866 2 9 2C5.13401 2 2 5.13401 2 9C2 12.866 5.13401 16 9 16Z" stroke="#666666" stroke-width="2"/>
+            <path d="M14 14L18 18" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </div>
+      <div class="table-wrapper">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="id">ID</th>
+              <th>Hình</th>
+              <th class="sortable" data-sort="ten">Tên sản phẩm</th>
+              <th class="sortable" data-sort="loai">Danh mục</th>
+              <th class="sortable" data-sort="price">Giá</th>
+              <th class="sortable" data-sort="quantity">Còn hàng</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody">
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <div class="container">
+      <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
+      <a href="../user/index.html" class="back-to-home">Trở về trang chủ</a>
+    </div>
+  </footer>
+
+  <script>
+    let products = []; 
+    let sortDirection = {}; 
+
+    function fetchProducts() {
+      fetch('/dishes')
+        .then(response => response.json())
+        .then(data => {
+          products = data; 
+          renderProducts(products); 
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu:", error));
+    }
+
+    function renderProducts(productsToRender) {
+      const tbody = document.getElementById('productTableBody');
+      tbody.innerHTML = ''; 
+
+      productsToRender.forEach(product => {
+        const row = document.createElement('tr');
+
+        const status = product.inventory.quantity > 0 ? 'Hoạt động' : 'Hết hàng';
+
+        row.innerHTML = `
+          <td>${product.id}</td>
+          <td><img src="/images/products/${product.hinhAnh}" alt="${product.ten}" class="product-image"></td>
+          <td>${product.ten}</td>
+          <td>${product.loai}</td>
+          <td>${product.inventory.price.toLocaleString()} đ</td>
+          <td>${product.inventory.quantity}</td>
+          <td><span class="status ${status === 'Hoạt động' ? 'active' : 'inactive'}">${status}</span></td>
+          <td>
+            <div class="action-wrapper">
+              <button class="action-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 10H14" stroke="#666666" stroke-width="2"/>
+                  <path d="M10 6V14" stroke="#666666" stroke-width="2"/>
+                </svg>
+              </button>
+              <div class="action-dropdown">
+                <a href="/product_detail?id=${product.id}" class="action-item">Xem</a>
+                <a href="/edit_product?id=${product.id}" class="action-item">Sửa</a>
+                <a href="#" class="action-item delete-btn" data-id="${product.id}">Xóa</a>
+              </div>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(row);
+      });
+
+      // Add event listeners to delete buttons
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const productId = button.getAttribute('data-id');
+          deleteProduct(productId);
+        });
+      });
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const filteredProducts = products.filter(product =>
+        product.ten.toLowerCase().includes(searchTerm) ||
+        product.loai.toLowerCase().includes(searchTerm)
+      );
+      renderProducts(filteredProducts);
+    });
+
+    // Sorting functionality
+    document.querySelectorAll('.sortable').forEach(header => {
+      header.addEventListener('click', () => {
+        const sortKey = header.getAttribute('data-sort');
+        const direction = sortDirection[sortKey] === 'asc' ? 'desc' : 'asc';
+        sortDirection[sortKey] = direction;
+
+        const sortedProducts = [...products].sort((a, b) => {
+          let valueA, valueB;
+
+          if (sortKey === 'price') {
+            valueA = a.inventory.price;
+            valueB = b.inventory.price;
+          } else if (sortKey === 'quantity') {
+            valueA = a.inventory.quantity;
+            valueB = b.inventory.quantity;
+          } else {
+            valueA = a[sortKey].toLowerCase();
+            valueB = b[sortKey].toLowerCase();
+          }
+
+          if (direction === 'asc') {
+            return valueA > valueB ? 1 : -1;
+          } else {
+            return valueA < valueB ? 1 : -1;
+          }
+        });
+
+        renderProducts(sortedProducts);
+      });
+    });
+
+    // Delete product functionality
+    function deleteProduct(productId) {
+      if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm với ID ${productId}?`)) {
+        fetch(`/dishes/${productId}`, {
+          method: 'DELETE'
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Không thể xóa sản phẩm!');
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert(data.message);
+            // Remove the product from the local array
+            products = products.filter(product => product.id !== productId);
+            renderProducts(products);
+          })
+          .catch(error => {
+            console.error("Lỗi khi xóa sản phẩm:", error);
+            alert(error.message);
+          });
+      }
+    }
+
+    fetchProducts();
+  </script>
+  <script src="../../assets/js/admin.js"></script>
+</body>
+</html>

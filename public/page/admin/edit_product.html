@@ -14,7 +14,7 @@
     </div>
     <nav class="sidebar-nav">
       
-      <a href="products_Mangement.html" class="nav-item active">
+      <a href="/" class="nav-item active">
         <span class="nav-icon">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
@@ -28,8 +28,8 @@
         </span>
       </a>
       <div class="sub-menu">
-        <a href="products_Mangement.html" class="sub-item">Tất cả sản phẩm</a>
-        <a href="add_product.html" class="sub-item">Thêm sản phẩm</a>
+        <a href="/" class="sub-item">Tất cả sản phẩm</a>
+        <a href="/add_product" class="sub-item">Thêm sản phẩm</a>
         <a href="categories.html" class="sub-item">Danh mục</a>
       </div>
       <a href="orders.html" class="nav-item">
@@ -40,7 +40,14 @@
         </span>
         Đơn hàng
       </a>
-      
+      <a href="posts.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5ZM5 7H15M5 9H15M5 11H15" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Bài viết
+      </a>
       <a href="users.html" class="nav-item">
         <span class="nav-icon">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +56,14 @@
         </span>
         Người dùng
       </a>
-      
+      <a href="settings.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12ZM16 10C16 12.2091 14.2091 14 12 14H8C5.79086 14 4 12.2091 4 10C4 7.79086 5.79086 6 8 6H12C14.2091 6 16 7.79086 16 10Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Cài đặt
+      </a>
     </nav>
   </aside>
 
@@ -58,60 +72,77 @@
     <div class="container">
       <div class="page-header">
         <h1>Chỉnh sửa sản phẩm</h1>
-        <a href="products.html" class="btn btn-secondary">Quay lại danh sách</a>
+        <a href="/" class="btn btn-secondary">Quay lại danh sách</a>
       </div>
-      <form class="edit-product-form">
+      <form class="edit-product-form" enctype="multipart/form-data">
+        <input type="hidden" id="product-id" name="id">
         <div class="form-row">
           <div class="form-group">
             <label for="product-name">Tên sản phẩm <span class="required">*</span></label>
-            <input type="text" id="product-name" name="product-name" value="Kem dưỡng ẩm cao cấp" required>
+            <input type="text" id="product-name" name="ten" required>
           </div>
           <div class="form-group">
             <label for="product-description">Mô tả <span class="required">*</span></label>
-            <textarea id="product-description" name="product-description" required>Kem dưỡng ẩm cao cấp giúp cung cấp độ ẩm sâu, làm mềm mịn da, phù hợp với mọi loại da.</textarea>
+            <textarea id="product-description" name="moTa" required></textarea>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-category">Danh mục <span class="required">*</span></label>
-            <select id="product-category" name="product-category" required>
+            <select id="product-category" name="loai" required>
               <option value="">Chọn danh mục</option>
-              <option value="cham-soc-da" selected>Chăm sóc da</option>
-              <option value="trang-diem">Trang điểm</option>
-              <option value="cham-soc-toc">Chăm sóc tóc</option>
+              <option value="Serum">Serum</option>
+              <option value="Kem Chống Nắng">Kem Chống Nắng</option>
+              <option value="Sữa Rửa Mặt">Sữa Rửa Mặt</option>
+              <option value="Toner">Toner</option>
+              <option value="Kem Dưỡng">Kem Dưỡng</option>
+              <option value="Tinh Chất">Tinh Chất</option>
+              <option value="Tẩy Tế Bào Chết">Tẩy Tế Bào Chết</option>
+              <option value="Xịt Khoáng">Xịt Khoáng</option>
+              <option value="Tẩy Trang">Tẩy Trang</option>
+              <option value="Kem Dưỡng Mắt">Kem Dưỡng Mắt</option>
+              <option value="Mặt Nạ Ngủ">Mặt Nạ Ngủ</option>
+              <option value="Gel Dưỡng">Gel Dưỡng</option>
+              <option value="Bộ Dưỡng Da">Bộ Dưỡng Da</option>
+              <option value="Mặt Nạ">Mặt Nạ</option>
+              <option value="Sữa Tắm">Sữa Tắm</option>
+              <option value="Dầu Dưỡng">Dầu Dưỡng</option>
+              <option value="Tinh Dầu">Tinh Dầu</option>
+              <option value="Gel Trị Mụn">Gel Trị Mụn</option>
+              <option value="Kem Lót">Kem Lót</option>
             </select>
           </div>
           <div class="form-group">
             <label for="product-brand">Thương hiệu <span class="required">*</span></label>
-            <input type="text" id="product-brand" name="product-brand" value="VM Beauty" required>
+            <input type="text" id="product-brand" name="thuongHieu" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-origin">Nơi sản xuất <span class="required">*</span></label>
-            <input type="text" id="product-origin" name="product-origin" value="Việt Nam" required>
+            <input type="text" id="product-origin" name="noiSanXuat" required>
           </div>
           <div class="form-group">
             <label for="product-stock">Số lượng tồn kho <span class="required">*</span></label>
-            <input type="number" id="product-stock" name="product-stock" value="50" min="0" required>
+            <input type="number" id="product-stock" name="soLuong" min="0" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="product-price">Giá <span class="required">*</span></label>
-            <input type="number" id="product-price" name="product-price" value="420000" min="0" required>
+            <input type="number" id="product-price" name="gia" min="0" required>
             <small>Đề nghị không khuyến mãi</small>
           </div>
           <div class="form-group">
             <label for="product-image">Hình ảnh <span class="required">*</span></label>
             <input type="file" id="product-image" name="product-image" accept="image/*">
             <div class="image-preview" id="image-preview">
-              <img id="preview-img" src="../../assets/images/products/product1.jpg" alt="Hình ảnh sản phẩm" style="display: block;">
+              <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
             </div>
           </div>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href='products.html'">Hủy</button>
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management.html'">Hủy</button>
           <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
         </div>
       </form>
@@ -126,6 +157,44 @@
     </div>
   </footer>
 
+  <script>
+    // Lấy ID sản phẩm từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+  
+    if (!productId) {
+      alert('Không tìm thấy ID sản phẩm trong URL!');
+    } else {
+      // Lấy dữ liệu sản phẩm từ endpoint /dishes/:id
+      fetch(`/dishes/${productId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Sản phẩm không tồn tại!');
+          }
+          return response.json();
+        })
+        .then(product => {
+          // Điền dữ liệu sản phẩm vào các trường biểu mẫu
+          document.getElementById('product-id').value = product.id;
+          document.getElementById('product-name').value = product.ten;
+          document.getElementById('product-description').value = product.moTa;
+          document.getElementById('product-category').value = product.loai;
+          document.getElementById('product-brand').value = product.thuongHieu;
+          document.getElementById('product-origin').value = product.noiSanXuat;
+          document.getElementById('product-stock').value = product.inventory.quantity;
+          document.getElementById('product-price').value = product.inventory.price;
+  
+          // Hiển thị hình ảnh sản phẩm hiện tại trong phần xem trước
+          const previewImg = document.getElementById('preview-img');
+          previewImg.src = `/images/products/${product.hinhAnh}`;
+          previewImg.style.display = 'block';
+        })
+        .catch(error => {
+          console.error("Lỗi khi tải dữ liệu:", error);
+          alert(error.message);
+        });
+    }
+  </script>
   <script src="../../assets/js/admin.js"></script>
 </body>
 </html>
