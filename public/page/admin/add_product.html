@@ -127,7 +127,7 @@
           </div>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management.html'">Hủy</button>
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
           <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
         </div>
       </form>
@@ -138,10 +138,58 @@
   <footer class="admin-footer">
     <div class="container">
       <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
-      <a href="../user/index.html" class="back-to-home">Trở về trang chủ</a>
+      <a href="/index" class="back-to-home">Trở về trang chủ</a>
     </div>
   </footer>
 
-  <script src="../../assets/js/admin.js"></script>
+  <script>
+    document.getElementById('product-image').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const previewImg = document.getElementById('preview-img');
+        previewImg.src = event.target.result;
+        previewImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.querySelector('.add-product-form').addEventListener('submit', (e) => {
+    e.preventDefault(); 
+
+    const formData = new FormData();
+    formData.append('ten', document.getElementById('product-name').value);
+    formData.append('moTa', document.getElementById('product-description').value);
+    formData.append('loai', document.getElementById('product-category').value);
+    formData.append('thuongHieu', document.getElementById('product-brand').value);
+    formData.append('noiSanXuat', document.getElementById('product-origin').value);
+    formData.append('soLuong', document.getElementById('product-stock').value);
+    formData.append('gia', document.getElementById('product-price').value);
+    formData.append('product-image', document.getElementById('product-image').files[0]);
+
+    fetch('/dishes', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Thêm sản phẩm thất bại!');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert(data.message);
+        window.location.href = '/'; 
+      })
+      .catch(error => {
+        console.error('Lỗi khi thêm sản phẩm:', error);
+        alert(error.message);
+      });
+  });
+  </script>
+
+  <!-- <script src="../../assets/js/admin.js"></script> -->
 </body>
 </html>

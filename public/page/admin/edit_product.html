@@ -136,9 +136,11 @@
           <div class="form-group">
             <label for="product-image">Hình ảnh <span class="required">*</span></label>
             <input type="file" id="product-image" name="product-image" accept="image/*">
-            <div class="image-preview" id="image-preview">
-              <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
-            </div>
+
+              <div class="image-preview" id="image-preview">
+                <img id="preview-img" src="" alt="" class="product-image" style="display: none;">
+              </div>
+
           </div>
         </div>
         <div class="form-actions">
@@ -153,7 +155,7 @@
   <footer class="admin-footer">
     <div class="container">
       <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
-      <a href="../user/index.html" class="back-to-home">Trở về trang chủ</a>
+      <a href="/index" class="back-to-home">Trở về trang chủ</a>
     </div>
   </footer>
 
@@ -174,7 +176,7 @@
           return response.json();
         })
         .then(product => {
-          // Điền dữ liệu sản phẩm vào các trường biểu mẫu
+
           document.getElementById('product-id').value = product.id;
           document.getElementById('product-name').value = product.ten;
           document.getElementById('product-description').value = product.moTa;
@@ -186,8 +188,10 @@
   
           // Hiển thị hình ảnh sản phẩm hiện tại trong phần xem trước
           const previewImg = document.getElementById('preview-img');
-          previewImg.src = `/images/products/${product.hinhAnh}`;
+          previewImg.src = `../../images/products/${product.hinhAnh}`;
           previewImg.style.display = 'block';
+
+                
         })
         .catch(error => {
           console.error("Lỗi khi tải dữ liệu:", error);

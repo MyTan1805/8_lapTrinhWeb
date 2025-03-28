@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addProductForm = document.querySelector('.add-product-form');
     const editProductForm = document.querySelector('.edit-product-form');
   
-    // Tìm kiếm sản phẩm (trong products_Management.html)
     if (productRows.length > 0) {
       searchInput.addEventListener('input', () => {
         const searchTerm = searchInput.value.toLowerCase();
@@ -95,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(response => response.json())
           .then(data => {
             alert(data.message);
-            window.location.href = 'products_Management.html';
+            window.location.href = '/';
           })
           .catch(error => {
             console.error('Error:', error);
@@ -103,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
       });
     }
+    
   
     // Xử lý form chỉnh sửa sản phẩm (trong edit_product.html)
     if (editProductForm) {
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productStockInput.value = product.inventory.quantity;
             productPriceInput.value = product.inventory.price;
             if (product.hinhAnh) {
-              previewImg.src = product.hinhAnh;
+              previewImg.src =  `../../images/products/${product.hinhAnh}`;
               previewImg.style.display = 'block';
             }
           })
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(response => response.json())
           .then(data => {
             alert(data.message);
-            window.location.href = 'products_Management.html';
+            window.location.href = '/';
           })
           .catch(error => {
             console.error('Error:', error);

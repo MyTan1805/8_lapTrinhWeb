@@ -5,18 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sản phẩm - Mỹ phẩm Việt Nam</title>
   <link rel="stylesheet" href="../../assets/css/user.css">
-
 </head>
 <body>
   <header>
     <div class="container">
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="Logo" class="header-logo">
+        <img src="../../images/logo.png" alt="Logo" class="header-logo">
       </div>
       <nav>
-        <a href="index.html">Trang chủ</a>
+        <a href="/index" class="active">Trang chủ</a>
         <div class="dropdown">
-          <a href="products.html" class="active">Sản phẩm 
+          <a href="/products">Sản phẩm 
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="2"/>
             </svg>
@@ -38,13 +37,13 @@
     <section class="search-filter">
       <div class="container">
         <div class="search-bar">
-          <input type="text" placeholder="Tìm sản phẩm" class="search-input">
+          <input type="text" placeholder="Tìm sản phẩm" class="search-input" id="searchInput">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 19L13.5 13.5M15 8.5C15 12.0899 12.0899 15 8.5 15C4.91015 15 2 12.0899 2 8.5C2 4.91015 4.91015 2 8.5 2C12.0899 2 15 4.91015 15 8.5Z" stroke="#666666" stroke-width="2"/>
+            <path d="M19 19L13.5 13.5M15 8.5C15 12.0899 15 12.0899 12.0899 15 8.5 15C4.91015 15 2 12.0899 2 8.5C2 4.91015 4.91015 2 8.5 2C12.0899 2 15 4.91015 15 8.5Z" stroke="#666666" stroke-width="2"/>
           </svg>
         </div>
         <div class="sort-filter">
-          <select>
+          <select id="sortSelect">
             <option value="price-asc">Giá: Thấp đến cao</option>
             <option value="price-desc">Giá: Cao đến thấp</option>
             <option value="name-asc">Tên: A đến Z</option>
@@ -60,88 +59,41 @@
           <div class="products-sidebar">
             <h3>Danh mục</h3>
             <div class="category-tags">
-              <label><input type="checkbox" name="category" value="sunscreen"> Kem chống nắng</label>
-              <label><input type="checkbox" name="category" value="facewash"> Sữa rửa mặt</label>
-              <label><input type="checkbox" name="category" value="lipstick"> Son môi</label>
-              <label><input type="checkbox" name="category" value="moisturizer"> Kem dưỡng ẩm</label>
+              <label><input type="checkbox" name="category" value="Serum"> Serum</label>
+              <label><input type="checkbox" name="category" value="Kem Chống Nắng"> Kem Chống Nắng</label>
+              <label><input type="checkbox" name="category" value="Sữa Rửa Mặt"> Sữa Rửa Mặt</label>
+              <label><input type="checkbox" name="category" value="Toner"> Toner</label>
+              <label><input type="checkbox" name="category" value="Kem Dưỡng"> Kem Dưỡng</label>
+              <label><input type="checkbox" name="category" value="Tinh Chất"> Tinh Chất</label>
+              <label><input type="checkbox" name="category" value="Tẩy Tế Bào Chết"> Tẩy Tế Bào Chết</label>
+              <label><input type="checkbox" name="category" value="Xịt Khoáng"> Xịt Khoáng</label>
+              <label><input type="checkbox" name="category" value="Tẩy Trang"> Tẩy Trang</label>
+              <label><input type="checkbox" name="category" value="Kem Dưỡng Mắt"> Kem Dưỡng Mắt</label>
+              <label><input type="checkbox" name="category" value="Mặt Nạ Ngủ"> Mặt Nạ Ngủ</label>
+              <label><input type="checkbox" name="category" value="Gel Dưỡng"> Gel Dưỡng</label>
+              <label><input type="checkbox" name="category" value="Bộ Dưỡng Da"> Bộ Dưỡng Da</label>
+              <label><input type="checkbox" name="category" value="Mặt Nạ"> Mặt Nạ</label>
+
             </div>
             <h3>Khoảng giá</h3>
             <div class="price-filter">
-              <input type="number" placeholder="Từ" class="price-input">
+              <input type="number" placeholder="Từ" class="price-input" id="priceFrom">
               <span>-</span>
-              <input type="number" placeholder="Đến" class="price-input">
+              <input type="number" placeholder="Đến" class="price-input" id="priceTo">
             </div>
           </div>
 
           <div class="products-grid">
-            <div class="product-list">
-              <a href="product_detail.html?id=1" class="product-item">
-                <div class="product-image">
-                  <img src="../assets/images/products/product1.jpg" alt="Sản phẩm 1">
-                  <span class="product-label discount">-16%</span>
-                </div>
-                <div class="product-info">
-                  <div class="product-rating">
-                    <span class="stars">★★★★★</span> (18)
-                  </div>
-                  <h4>Kem dưỡng ẩm cao cấp</h4>
-                  <div class="product-price">
-                    <span class="current-price">420.000 đ</span>
-                    <span class="original-price">500.000 đ</span>
-                  </div>
-                </div>
-              </a>
-              <a href="product_detail.html?id=2" class="product-item">
-                <div class="product-image">
-                  <img src="../assets/images/products/product2.jpg" alt="Sản phẩm 2">
-                  <span class="product-label new">New</span>
-                </div>
-                <div class="product-info">
-                  <div class="product-rating">
-                    <span class="stars">★★★★☆</span> (12)
-                  </div>
-                  <h4>Sữa rửa mặt dịu nhẹ</h4>
-                  <div class="product-price">
-                    <span class="current-price">150.000 đ</span>
-                  </div>
-                </div>
-              </a>
-              <a href="product_detail.html?id=3" class="product-item">
-                <div class="product-image">
-                  <img src="../assets/images/products/product3.jpg" alt="Sản phẩm 3">
-                </div>
-                <div class="product-info">
-                  <div class="product-rating">
-                    <span class="stars">★★★★★</span> (20)
-                  </div>
-                  <h4>Son môi lâu trôi</h4>
-                  <div class="product-price">
-                    <span class="current-price">300.000 đ</span>
-                  </div>
-                </div>
-              </a>
-              <a href="product_detail.html?id=4" class="product-item">
-                <div class="product-image">
-                  <img src="../assets/images/products/product4.jpg" alt="Sản phẩm 4">
-                </div>
-                <div class="product-info">
-                  <div class="product-rating">
-                    <span class="stars">★★★★☆</span> (15)
-                  </div>
-                  <h4>Kem chống nắng SPF50</h4>
-                  <div class="product-price">
-                    <span class="current-price">250.000 đ</span>
-                  </div>
-                </div>
-              </a>
+            <div class="product-list" id="productList">
             </div>
             <div class="pagination">
-              <button class="prev-btn">
+              <button class="prev-btn" id="prevPage" disabled>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 4L6 10L12 16" stroke="#333333" stroke-width="2"/>
                 </svg>
               </button>
-              <button class="next-btn">
+              <span id="pageInfo"></span>
+              <button class="next-btn" id="nextPage">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 4L14 10L8 16" stroke="#333333" stroke-width="2"/>
                 </svg>
@@ -156,9 +108,9 @@
   <footer>
     <div class="container">
       <div class="footer-left">
-        <img src="../assets/images/logo.png" alt="Logo" class="footer-logo">
+        <img src="../../images/logo.png" alt="Logo" class="footer-logo">
         <nav>
-          <a href="products.html">Sản phẩm</a>
+          <a href="/products">Sản phẩm</a>
           <a href="about.html">About Us</a>
           <a href="contact.html">Liên hệ</a>
         </nav>
@@ -168,5 +120,154 @@
   </footer>
 
   <script src="../../assets/js/user.js"></script>
+  <script>
+    let products = [];
+    let filteredProducts = [];
+    const productsPerPage = 8; // Số sản phẩm mỗi trang
+    let currentPage = 1;
+
+    // Lấy dữ liệu sản phẩm từ máy chủ
+    function fetchProducts() {
+      fetch('/dishes')
+        .then(response => response.json())
+        .then(data => {
+          products = data;
+          filteredProducts = [...products];
+          applyFilters();
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu:", error));
+    }
+
+    // Hiển thị sản phẩm
+    function renderProducts() {
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+
+      const startIndex = (currentPage - 1) * productsPerPage;
+      const endIndex = startIndex + productsPerPage;
+      const productsToRender = filteredProducts.slice(startIndex, endIndex);
+
+      productsToRender.forEach(product => {
+        const productItem = document.createElement('a');
+        productItem.href = `product_detail?id=${product.id}`;
+        productItem.className = 'product-item';
+
+        const discount = product.discount ? `<span class="product-label discount">-${product.discount}%</span>` : '';
+        const isNew = product.isNew ? `<span class="product-label new">New</span>` : '';
+
+        const originalPrice = product.inventory.price;
+        const currentPrice = product.discount ? originalPrice * (1 - product.discount / 100) : originalPrice;
+
+        const averageRating = product.ratings.length > 0
+          ? (product.ratings.reduce((sum, rating) => sum + rating, 0) / product.ratings.length).toFixed(1)
+          : 0;
+        const stars = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
+
+        productItem.innerHTML = `
+          <div class="product-image">
+            <img src="/images/products/${product.hinhAnh}" alt="${product.ten}">
+            ${discount || isNew}
+          </div>
+          <div class="product-info">
+            <div class="product-rating">
+              <span class="stars">${stars}</span> (${product.ratings.length})
+            </div>
+            <h4>${product.ten}</h4>
+            <div class="product-price">
+              <span class="current-price">${currentPrice.toLocaleString()} đ</span>
+              ${product.discount ? `<span class="original-price">${originalPrice.toLocaleString()} đ</span>` : ''}
+            </div>
+          </div>
+        `;
+        productList.appendChild(productItem);
+      });
+
+      updatePaginationControls();
+    }
+
+    // Cập nhật phân trang
+    function updatePaginationControls() {
+      const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+      const prevButton = document.getElementById('prevPage');
+      const nextButton = document.getElementById('nextPage');
+      const pageInfo = document.getElementById('pageInfo');
+
+      pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+      prevButton.disabled = currentPage === 1;
+      nextButton.disabled = currentPage === totalPages || totalPages === 0;
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(checkbox => checkbox.value);
+      const priceFrom = parseInt(document.getElementById('priceFrom').value) || 0;
+      const priceTo = parseInt(document.getElementById('priceTo').value) || Infinity;
+
+      filteredProducts = products.filter(product => {
+        const matchesSearch = product.ten.toLowerCase().includes(searchTerm);
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.loai);
+        const productPrice = product.discount
+          ? product.inventory.price * (1 - product.discount / 100)
+          : product.inventory.price;
+        const matchesPrice = productPrice >= priceFrom && productPrice <= priceTo;
+
+        return matchesSearch && matchesCategory && matchesPrice;
+      });
+
+      const sortValue = document.getElementById('sortSelect').value;
+      if (sortValue === 'price-asc') {
+        filteredProducts.sort((a, b) => {
+          const priceA = a.discount ? a.inventory.price * (1 - a.discount / 100) : a.inventory.price;
+          const priceB = b.discount ? b.inventory.price * (1 - b.discount / 100) : b.inventory.price;
+          return priceA - priceB;
+        });
+      } else if (sortValue === 'price-desc') {
+        filteredProducts.sort((a, b) => {
+          const priceA = a.discount ? a.inventory.price * (1 - a.discount / 100) : a.inventory.price;
+          const priceB = b.discount ? b.inventory.price * (1 - b.discount / 100) : b.inventory.price;
+          return priceB - priceA;
+        });
+      } else if (sortValue === 'name-asc') {
+        filteredProducts.sort((a, b) => a.ten.localeCompare(b.ten));
+      } else if (sortValue === 'name-desc') {
+        filteredProducts.sort((a, b) => b.ten.localeCompare(a.ten));
+      }
+
+      currentPage = 1; 
+      renderProducts();
+    }
+
+    // Sự kiện tìm kiếm
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+    document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+      checkbox.addEventListener('change', applyFilters);
+    });
+
+    document.getElementById('priceFrom').addEventListener('input', applyFilters);
+    document.getElementById('priceTo').addEventListener('input', applyFilters);
+
+    // Sự kiện sắp xếp
+    document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+    // Sự kiện phân trang
+    document.getElementById('prevPage').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderProducts();
+      }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+      const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderProducts();
+      }
+    });
+
+    // Lấy dữ liệu khi trang được tải
+    fetchProducts();
+  </script>
 </body>
 </html>

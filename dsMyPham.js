@@ -292,7 +292,7 @@ let dsMyPham =[
     {
         "id": "SP012",
         "ten": "Kem Dưỡng Mắt",
-        "hinhAnh": "IMG012.pjg",
+        "hinhAnh": "IMG12.webp",
         "loai": "Kem Dưỡng Mắt",
         "thuongHieu": "Laneige",
         "moTa": "Kem dưỡng mắt giúp giảm quầng thâm và bọng mắt.",
