@@ -11,24 +11,23 @@
   <header>
     <div class="container">
       <div class="logo">
-        <img src="../../images/logo.png" alt="Logo" class="header-logo">
+        <!-- Tăng kích thước logo trong header nếu cần -->
+        <img src="../../images/logo.png" alt="Logo" class="header-logo" > <!-- Ví dụ tăng chiều rộng logo -->
       </div>
       <nav>
         <a href="/index" class="active">Trang chủ</a>
         <div class="dropdown">
-          <a href="/products">Sản phẩm 
+          <a href="/products">Sản phẩm
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="2"/>
             </svg>
           </a>
           <div class="dropdown-content">
-            <a href="#">Kem chống nắng</a>
-            <a href="#">Sữa rửa mặt</a>
-            <a href="#">Son môi</a>
+            <a href="/products?category=kem-chong-nang">Kem chống nắng</a>
+            <a href="/products?category=sua-rua-mat">Sữa rửa mặt</a>
+            <a href="/products?category=son-moi">Son môi</a>
           </div>
         </div>
-        <a href="contact.html">Liên hệ</a>
-        <a href="about.html">About Us</a>
         <a href="account.html">Tài khoản</a>
       </nav>
     </div>
@@ -40,7 +39,7 @@
       <div class="hero-left">
         <h1>Khám phá vẻ đẹp tự nhiên với mỹ phẩm Việt Nam</h1>
         <p>Chăm sóc làn da của bạn với các sản phẩm an toàn, chất lượng cao, được làm từ thiên nhiên.</p>
-        <a href="/products" class="btn">Mua sắm ngay</a>
+        <a href="/products" class="btn">Tìm hiểu ngay</a>
       </div>
       <div class="hero-right">
         <img src="../../images/hero-image.jpg" alt="Hero Image">
@@ -53,146 +52,75 @@
     </div>
   </section>
 
-  <!-- Categories Section -->
-  <section class="categories">
+  <!-- ======= About Us Section ======= -->
+  <section id="about-us" class="about-us">
     <div class="container">
-      <h2>Khám phá danh mục</h2>
-      <div class="category-grid">
-        <div class="category-item">
-          <img src="../assets/images/categories/skincare.jpg" alt="Chăm sóc da">
-          <h3>Chăm sóc da</h3>
-          <p>Sản phẩm dưỡng da an toàn</p>
-          <a href="/products?category=skincare" class="category-link">
-            Xem thêm 
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 4L14 10L8 16" stroke="#D5D6CF" stroke-width="2"/>
-            </svg>
-          </a>
+      <h2>Về Chúng Tôi</h2>
+      <p style="max-width: 700px; margin: 0 auto 40px auto; color: #666;">
+        Chúng tôi là đội ngũ đam mê mang đến những sản phẩm mỹ phẩm Việt Nam chất lượng và an toàn đến tay người tiêu dùng.
+      </p>
+      <div class="team-grid">
+        <!-- Thành viên 1 -->
+        <div class="team-member">
+          <img src="../../images/team/member1.jpg" alt="Tên Thành Viên 1"> <!-- Thay đổi đường dẫn ảnh -->
+          <h3>Nguyễn Văn A</h3>
+          <p class="role">Trưởng nhóm / Backend Developer</p>
+          <p class="bio">Chịu trách nhiệm chính về kiến trúc hệ thống và phát triển logic phía máy chủ.</p>
         </div>
-        <div class="category-item">
-          <img src="../assets/images/categories/makeup.jpg" alt="Trang điểm">
-          <h3>Trang điểm</h3>
-          <p>Sản phẩm làm đẹp tự nhiên</p>
-          <a href="/products?category=makeup" class="category-link">
-            Xem thêm 
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 4L14 10L8 16" stroke="#D5D6CF" stroke-width="2"/>
-            </svg>
-          </a>
+        <!-- Thành viên 2 -->
+        <div class="team-member">
+          <img src="../../images/team/member2.jpg" alt="Tên Thành Viên 2"> <!-- Thay đổi đường dẫn ảnh -->
+          <h3>Trần Thị B</h3>
+          <p class="role">Frontend Developer / UI Designer</p>
+           <p class="bio">Thiết kế giao diện người dùng và hiện thực hóa trải nghiệm trên trang web.</p>
         </div>
-        <div class="category-item">
-          <img src="../assets/images/categories/haircare.jpg" alt="Chăm sóc tóc">
-          <h3>Chăm sóc tóc</h3>
-          <p>Sản phẩm nuôi dưỡng tóc</p>
-          <a href="/products?category=haircare" class="category-link">
-            Xem thêm 
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 4L14 10L8 16" stroke="#D5D6CF" stroke-width="2"/>
-            </svg>
-          </a>
+        <!-- Thành viên 3 -->
+        <div class="team-member">
+          <img src="../../images/team/member3.jpg" alt="Tên Thành Viên 3"> <!-- Thay đổi đường dẫn ảnh -->
+          <h3>Lê Văn C</h3>
+          <p class="role">Content & Marketing</p>
+           <p class="bio">Phụ trách nội dung sản phẩm, chiến lược quảng bá và tương tác khách hàng.</p>
         </div>
       </div>
     </div>
   </section>
+  <!-- End About Us Section -->
 
-  <!-- Featured Products Section -->
-  <section class="featured-products">
+  <!-- ======= Contact Section ======= -->
+  <section id="contact" class="contact">
     <div class="container">
-      <div class="section-header">
-        <h2>Featured Products</h2>
-        <a href="/products" class="view-all">View all 
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 4L14 10L8 16" stroke="#D5D6CF" stroke-width="2"/>
-          </svg>
-        </a>
-      </div>
-      <div class="product-grid" id="featuredProductGrid">
-        <!-- Sản phẩm sẽ được render động tại đây -->
+      <h2>Liên Hệ Với Chúng Tôi</h2>
+      <p>
+        Nếu bạn có bất kỳ câu hỏi, góp ý hoặc cần hỗ trợ, đừng ngần ngại liên hệ với chúng tôi qua các kênh dưới đây. Chúng tôi luôn sẵn lòng lắng nghe!
+      </p>
+      <div class="contact-info">
+        <p><strong>Địa chỉ:</strong> 123 Đường ABC, Quận XYZ, Thành phố Hồ Chí Minh</p>
+        <p><strong>Email:</strong> <a href="mailto:info@myphamvietnam.com">info@myphamvietnam.com</a></p>
+        <p><strong>Điện thoại:</strong> <a href="tel:+84123456789">0123 456 789</a></p>
       </div>
     </div>
   </section>
-
-  <!-- Brands Section -->
-  <section class="brands">
-    <div class="container">
-      <h2>Thương hiệu nổi bật</h2>
-      <div class="brand-logos">
-        <img src="../../images/brands/brand1.png" alt="Brand 1">
-        <img src="../../images/brands/brand2.png" alt="Brand 2">
-        <img src="../../images/brands/brand3.svg" alt="Brand 3">
-        <img src="../../images/brands/brand4.png" alt="Brand 4">
-      </div>
-    </div>
-  </section>
+  <!-- End Contact Section -->
 
   <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-left">
-        <img src="../../images/logo.png" alt="Logo" class="footer-logo">
+        <img src="../../images/logo.png" alt="Logo" class="footer-logo"> 
         <nav>
           <a href="/products">Sản phẩm</a>
-          <a href="about.html">About Us</a>
-          <a href="contact.html">Liên hệ</a>
+          <a href="#about-us">Về chúng tôi</a>
+          <a href="#contact">Liên hệ</a>
         </nav>
       </div>
-      <p>Copyright © 2021 Company Name</p>
+      <p>Copyright © 2024 Mỹ phẩm Việt Nam</p> <!-- Cập nhật năm -->
     </div>
   </footer>
 
   <script src="../../assets/js/user.js"></script>
+
   <script>
-    // Lấy và hiển thị sản phẩm nổi bật
-    function fetchFeaturedProducts() {
-      fetch('/dishes')
-        .then(response => response.json())
-        .then(products => {
-          // Sắp xếp sản phẩm theo số lượng đánh giá (nếu có), hoặc lấy 4 sản phẩm đầu tiên
-          const featuredProducts = products
-            .sort((a, b) => (b.ratings ? b.ratings.length : 0) - (a.ratings ? a.ratings.length : 0))
-            .slice(0, 4);
 
-          renderFeaturedProducts(featuredProducts);
-        })
-        .catch(error => console.error("Lỗi khi tải dữ liệu sản phẩm nổi bật:", error));
-    }
-
-    // Hiển thị sản phẩm nổi bật
-    function renderFeaturedProducts(products) {
-      const productGrid = document.getElementById('featuredProductGrid');
-      productGrid.innerHTML = '';
-
-      products.forEach(product => {
-        const productItem = document.createElement('a');
-        productItem.href = `product_detail?id=${product.id}`;
-        productItem.className = 'product-item';
-
-        const averageRating = product.ratings && product.ratings.length > 0
-          ? (product.ratings.reduce((sum, rating) => sum + rating, 0) / product.ratings.length).toFixed(1)
-          : 0;
-        const stars = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
-
-        productItem.innerHTML = `
-          <div class="product-image">
-            <img src="/images/products/${product.hinhAnh}" alt="${product.ten}">
-          </div>
-          <div class="product-info">
-            <div class="product-rating">
-              <span class="stars">${stars}</span> (${product.ratings ? product.ratings.length : 0})
-            </div>
-            <h4>${product.ten}</h4>
-            <p>${product.loai}</p>
-            <div class="product-price">
-              <span class="current-price">${product.inventory.price.toLocaleString()} đ</span>
-            </div>
-          </div>
-        `;
-        productGrid.appendChild(productItem);
-      });
-    }
-
-    // Gọi hàm để lấy dữ liệu khi trang được tải
-    fetchFeaturedProducts();
   </script>
 </body>
 </html>

@@ -61,7 +61,7 @@
   }
   
   nav a:hover, nav a.active {
-    color: #D5D6CF; /* Điểm nhấn: xanh nhạt đậm hơn */
+    color: #328ea6;
   }
   
   .dropdown {
@@ -566,7 +566,7 @@
   }
   
   .footer-logo {
-    height: 60px;
+    height: 40px;
   }
   
   footer nav a {
@@ -1033,4 +1033,108 @@
     text-align: center;
   }
 
-  
+  /* --- CSS cho phần About Us --- */
+  .about-us {
+    padding: 60px 0;
+    background-color: #f9f9f9; /* Nền nhẹ để phân biệt */
+    text-align: center;
+  }
+
+  .about-us h2 {
+    margin-bottom: 40px;
+    font-size: 2.2em;
+    color: #333;
+  }
+
+  .team-grid {
+    display: grid;
+    /* Tạo 3 cột trên màn hình lớn, tự động xuống dòng trên màn hình nhỏ */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px; /* Khoảng cách giữa các thành viên */
+    max-width: 900px; /* Giới hạn chiều rộng tối đa của lưới */
+    margin: 0 auto; /* Căn giữa lưới */
+  }
+
+  .team-member {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .team-member:hover {
+      transform: translateY(-5px); /* Hiệu ứng nhấc lên khi hover */
+  }
+
+  .team-member img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%; /* Bo tròn ảnh đại diện */
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    margin-bottom: 15px;
+    border: 3px solid #eee;
+  }
+
+  .team-member h3 {
+    margin-bottom: 8px;
+    font-size: 1.4em;
+    color: #444;
+  }
+
+  .team-member .role {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+  }
+
+   .team-member .bio {
+      font-size: 0.9em;
+      color: #555;
+      line-height: 1.5;
+  }
+
+  /* --- CSS cho phần Contact --- */
+  .contact {
+    padding: 60px 0;
+    text-align: center;
+  }
+
+  .contact h2 {
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    color: #333;
+  }
+
+  .contact p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto 15px auto; /* Căn giữa và thêm khoảng cách dưới */
+  }
+
+  .contact-info {
+    margin-top: 20px;
+  }
+
+  .contact-info p {
+      margin-bottom: 10px; /* Khoảng cách giữa các dòng thông tin liên hệ */
+  }
+
+  .contact-info strong {
+    margin-right: 8px;
+    color: #333;
+  }
+
+  .contact-info a {
+    color: #007bff; /* Màu link đặc trưng */
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .contact-info a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }

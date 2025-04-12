@@ -1,0 +1,30 @@
+# Bỏ qua thư mục node_modules (thư viện Node.js)
+node_modules/
+
+# Bỏ qua file log hoặc file tạm
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Bỏ qua file cấu hình IDE hoặc editor (nếu có)
+.vscode/
+.idea/
+
+# Bỏ qua file dữ liệu nhạy cảm (nếu user.json chứa thông tin nhạy cảm)
+user.json
+
+# Bỏ qua các file build hoặc dist (nếu có)
+dist/
+build/
+
+# Bỏ qua file môi trường (nếu có)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Bỏ qua file tạm của hệ điều hành
+.DS_Store
+Thumbs.db
