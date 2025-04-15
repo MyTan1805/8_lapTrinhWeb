@@ -98,6 +98,64 @@ app.get("/dishes/:id", async (req, res) => {
 });
 
 // Thêm sp mới
+// app.post('/dishes', async (req, res) => {
+//     const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
+//     const file = req.files?.['product-image'];
+  
+//     if (!ten || !moTa || !loai || !thuongHieu || !noiSanXuat || !soLuong || !gia || !file) {
+//       return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin!' });
+//     }
+  
+//     const lastProduct = await cosmeticsCollection.find().sort({ id: -1 }).limit(1).toArray();
+//     const newId = lastProduct.length > 0
+//       ? `SP${(parseInt(lastProduct[0].id.replace('SP', '')) + 1).toString().padStart(3, '0')}`
+//       : 'SP001';
+  
+//     const fileName = `${newId}_${file.name}`;
+//     const filePath = path.join(__dirname, 'public/images/products', fileName);
+  
+//     file.mv(filePath, async (err) => {
+//       if (err) {
+//         console.error('Lỗi khi lưu hình ảnh:', err);
+//         return res.status(500).json({ message: 'Lỗi khi lưu hình ảnh!' });
+//       }
+  
+//       const newProduct = {
+//         id: newId,
+//         ten,
+//         moTa,
+//         loai,
+//         thuongHieu,
+//         noiSanXuat,
+//         hinhAnh: fileName,
+//         inventory: {
+//           quantity: parseInt(soLuong),
+//           price: parseInt(gia)
+//         },
+//         dacTinh: {
+//           keyIngredient: dacTinh?.keyIngredient || '',
+//           skinConcernTargeted: dacTinh?.skinConcernTargeted || [],
+//           texture: dacTinh?.texture || '',
+//           scent: dacTinh?.scent || ''
+//         },
+//         ratings: []
+//       };
+  
+//       try {
+//         await cosmeticsCollection.insertOne(newProduct);
+//         res.json({ message: 'Thêm sản phẩm thành công!', product: newProduct });
+//       } catch (err) {
+//         console.error('Lỗi khi thêm sản phẩm:', err);
+//         res.status(500).json({ message: 'Lỗi máy chủ khi thêm sản phẩm!' });
+//       }
+//     });
+//   });
+
+
+
+
+
+//dặt tính 
 app.post('/dishes', async (req, res) => {
     const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
     const file = req.files?.['product-image'];
@@ -132,12 +190,7 @@ app.post('/dishes', async (req, res) => {
           quantity: parseInt(soLuong),
           price: parseInt(gia)
         },
-        dacTinh: {
-          keyIngredient: dacTinh?.keyIngredient || '',
-          skinConcernTargeted: dacTinh?.skinConcernTargeted || [],
-          texture: dacTinh?.texture || '',
-          scent: dacTinh?.scent || ''
-        },
+        dacTinh: JSON.parse(dacTinh || '{}'), // Chuyển đổi chuỗi JSON thành đối tượng
         ratings: []
       };
   

@@ -118,7 +118,7 @@
             <input type="number" id="product-price" name="gia" placeholder="0" min="0" required>
             <small>Đề nghị không khuyến mãi</small>
           </div>
-          <div class="form-row">
+          <!-- <div class="form-row">
             <div class="form-group">
               <label for="key-ingredient">Thành phần chính</label>
               <input type="text" id="key-ingredient" name="keyIngredient" placeholder="Nhập thành phần chính">
@@ -137,7 +137,7 @@
               <label for="scent">Mùi hương</label>
               <input type="text" id="scent" name="scent" placeholder="Nhập mùi hương">
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="product-image">Hình ảnh <span class="required">*</span></label>
             <input type="file" id="product-image" name="product-image" accept="image/*" required>
@@ -145,6 +145,36 @@
               <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
             </div>
           </div>
+
+          <!-- Đặt Tính  -->
+          <div class="form-group">
+            <label for="custom-attributes">Đặc tính sản phẩm</label>
+            <div id="custom-attributes">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="key-ingredient">Thành phần chính</label>
+                  <input type="text" id="key-ingredient" name="keyIngredient" placeholder="Nhập thành phần chính">
+                </div>
+                <div class="form-group">
+                  <label for="skin-concern">Vấn đề da cần giải quyết</label>
+                  <input type="text" id="skin-concern" name="skinConcernTargeted" placeholder="Nhập các vấn đề da (phân cách bằng dấu phẩy)">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="texture">Kết cấu</label>
+                  <input type="text" id="texture" name="texture" placeholder="Nhập kết cấu sản phẩm">
+                </div>
+                <div class="form-group">
+                  <label for="scent">Mùi hương</label>
+                  <input type="text" id="scent" name="scent" placeholder="Nhập mùi hương">
+                </div>
+              </div>
+            </div>
+            <button type="button" id="add-attribute" class="btn btn-secondary">Thêm đặc tính</button>
+          </div>
+
+
         </div>
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
@@ -176,41 +206,116 @@
       }
     });
   
-    document.querySelector('.add-product-form').addEventListener('submit', (e) => {
-      e.preventDefault(); 
+  //   document.querySelector('.add-product-form').addEventListener('submit', (e) => {
+  //     e.preventDefault(); 
   
-      const formData = new FormData();
-      formData.append('ten', document.getElementById('product-name').value);
-      formData.append('moTa', document.getElementById('product-description').value);
-      formData.append('loai', document.getElementById('product-category').value);
-      formData.append('thuongHieu', document.getElementById('product-brand').value);
-      formData.append('noiSanXuat', document.getElementById('product-origin').value);
-      formData.append('soLuong', document.getElementById('product-stock').value);
-      formData.append('gia', document.getElementById('product-price').value);
-      formData.append('product-image', document.getElementById('product-image').files[0]);
-      formData.append('dacTinh[keyIngredient]', document.getElementById('key-ingredient').value);
-      formData.append('dacTinh[skinConcernTargeted]', document.getElementById('skin-concern').value.split(',').map(item => item.trim()));
-      formData.append('dacTinh[texture]', document.getElementById('texture').value);
-      formData.append('dacTinh[scent]', document.getElementById('scent').value);
-      fetch('/dishes', {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Thêm sản phẩm thất bại!');
-        }
-        return response.json();
-      })
-      .then(data => {
-        alert(data.message);
-        window.location.href = '/';
-      })
-      .catch(error => {
-        console.error('Lỗi khi thêm sản phẩm:', error);
-        alert(error.message);
-      });
+  //     const formData = new FormData();
+  //     formData.append('ten', document.getElementById('product-name').value);
+  //     formData.append('moTa', document.getElementById('product-description').value);
+  //     formData.append('loai', document.getElementById('product-category').value);
+  //     formData.append('thuongHieu', document.getElementById('product-brand').value);
+  //     formData.append('noiSanXuat', document.getElementById('product-origin').value);
+  //     formData.append('soLuong', document.getElementById('product-stock').value);
+  //     formData.append('gia', document.getElementById('product-price').value);
+  //     formData.append('product-image', document.getElementById('product-image').files[0]);
+  //     formData.append('dacTinh[keyIngredient]', document.getElementById('key-ingredient').value);
+  //     formData.append('dacTinh[skinConcernTargeted]', document.getElementById('skin-concern').value.split(',').map(item => item.trim()));
+  //     formData.append('dacTinh[texture]', document.getElementById('texture').value);
+  //     formData.append('dacTinh[scent]', document.getElementById('scent').value);
+  //     fetch('/dishes', {
+  //     method: 'POST',
+  //     body: formData
+  //   })
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Thêm sản phẩm thất bại!');
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(data => {
+  //       alert(data.message);
+  //       window.location.href = '/';
+  //     })
+  //     .catch(error => {
+  //       console.error('Lỗi khi thêm sản phẩm:', error);
+  //       alert(error.message);
+  //     });
+  // });
+
+
+
+
+  
+  //đặc tính 
+  document.getElementById('add-attribute').addEventListener('click', () => {
+  const customAttributes = document.getElementById('custom-attributes');
+
+  // Tạo một dòng nhập liệu mới cho đặc tính
+  const attributeRow = document.createElement('div');
+  attributeRow.classList.add('attribute-row');
+
+  attributeRow.innerHTML = `
+    <input type="text" class="attribute-key" placeholder="Tên đặc tính (ví dụ: keyIngredient)" required>
+    <input type="text" class="attribute-value" placeholder="Giá trị đặc tính (ví dụ: Niacinamide)" required>
+    <button type="button" class="remove-attribute btn btn-danger">Xóa</button>
+  `;
+
+  // Thêm sự kiện xóa cho nút "Xóa"
+  attributeRow.querySelector('.remove-attribute').addEventListener('click', () => {
+    customAttributes.removeChild(attributeRow);
   });
+
+  // Thêm dòng nhập liệu vào danh sách đặc tính
+  customAttributes.appendChild(attributeRow);
+});
+
+// Thu thập dữ liệu từ các trường đặc tính khi gửi biểu mẫu
+document.querySelector('.add-product-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append('ten', document.getElementById('product-name').value);
+  formData.append('moTa', document.getElementById('product-description').value);
+  formData.append('loai', document.getElementById('product-category').value);
+  formData.append('thuongHieu', document.getElementById('product-brand').value);
+  formData.append('noiSanXuat', document.getElementById('product-origin').value);
+  formData.append('soLuong', document.getElementById('product-stock').value);
+  formData.append('gia', document.getElementById('product-price').value);
+  formData.append('product-image', document.getElementById('product-image').files[0]);
+
+  // Thu thập các đặc tính
+  const attributes = {};
+  document.querySelectorAll('.attribute-row').forEach(row => {
+    const key = row.querySelector('.attribute-key').value.trim();
+    const value = row.querySelector('.attribute-value').value.trim();
+    if (key && value) {
+      attributes[key] = value;
+    }
+  });
+
+  // Thêm đặc tính vào FormData
+  formData.append('dacTinh', JSON.stringify(attributes));
+
+  // Gửi dữ liệu đến server
+  fetch('/dishes', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Thêm sản phẩm thất bại!');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message);
+      window.location.href = '/';
+    })
+    .catch(error => {
+      console.error('Lỗi khi thêm sản phẩm:', error);
+      alert(error.message);
+    });
+});
     </script>
 
   <!-- <script src="../../assets/js/admin.js"></script> -->
