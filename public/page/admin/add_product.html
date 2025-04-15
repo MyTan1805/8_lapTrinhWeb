@@ -145,10 +145,9 @@
               <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
             </div>
           </div>
-
-          <!-- Đặt Tính  -->
+        </div>
+          <!-- Đặt Tính -->
           <div class="form-group">
-            <label for="custom-attributes">Đặc tính sản phẩm</label>
             <div id="custom-attributes">
               <div class="form-row">
                 <div class="form-group">
@@ -171,11 +170,14 @@
                 </div>
               </div>
             </div>
-            <button type="button" id="add-attribute" class="btn btn-secondary">Thêm đặc tính</button>
+            <div class="form-row">
+              <div class="form-group">
+                <button type="button" id="add-attribute" class="btn btn-secondary">Thêm đặc tính</button>
+              </div>
+            </div>
           </div>
 
 
-        </div>
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
           <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
@@ -245,7 +247,7 @@
 
 
 
-  
+
   //đặc tính 
   document.getElementById('add-attribute').addEventListener('click', () => {
   const customAttributes = document.getElementById('custom-attributes');
@@ -255,9 +257,8 @@
   attributeRow.classList.add('attribute-row');
 
   attributeRow.innerHTML = `
-    <input type="text" class="attribute-key" placeholder="Tên đặc tính (ví dụ: keyIngredient)" required>
     <input type="text" class="attribute-value" placeholder="Giá trị đặc tính (ví dụ: Niacinamide)" required>
-    <button type="button" class="remove-attribute btn btn-danger">Xóa</button>
+    <button type="button" class="remove-attribute btn btn-danger m-5">Xóa</button>
   `;
 
   // Thêm sự kiện xóa cho nút "Xóa"
