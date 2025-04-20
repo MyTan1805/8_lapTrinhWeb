@@ -5,7 +5,7 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
-const { MongoClient, ObjectId } = require('mongodb'); 
+const { MongoClient, ObjectId } = require('mongodb');
 
 const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const client = new MongoClient(url);
@@ -20,6 +20,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
+
 const uploadDir = path.join(__dirname, 'public/images/products');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -35,16 +36,41 @@ async function connectDB() {
         await cosmeticsCollection.createIndex({ id: 1 }, { unique: true, sparse: true });
         console.log(`Sử dụng database: ${dbName}`);
         console.log(`Sử dụng collection: ${collectionName}`);
-        // Trả về true hoặc một giá trị nào đó để .then() biết là thành công (tùy chọn)
         return true;
     } catch (err) {
         console.error('Kết nối đến MongoDB thất bại', err);
-        // Ném lỗi để .catch() bắt được
         throw err;
     }
 }
 
-// Routes
+// Hàm tạo ID tự động dựa trên mã danh mục
+async function generateNextProductId(categoryCode) {
+    if (!cosmeticsCollection) {
+        throw new Error("Database collection is not available.");
+    }
+    if (!categoryCode || typeof categoryCode !== 'string' || categoryCode.length !== 4) {
+        throw new Error("Invalid category code provided for ID generation.");
+    }
+
+    const lastProduct = await cosmeticsCollection
+        .find({ id: { $regex: `^${categoryCode}` } })
+        .sort({ id: -1 })
+        .limit(1)
+        .project({ id: 1 })
+        .toArray();
+
+    let nextSequence = 1;
+    if (lastProduct.length > 0 && lastProduct[0].id) {
+        const lastSequence = parseInt(lastProduct[0].id.slice(4), 10);
+        if (!isNaN(lastSequence)) {
+            nextSequence = lastSequence + 1;
+        }
+    }
+
+    const formattedSequence = nextSequence.toString().padStart(4, '0');
+    const newId = `${categoryCode}${formattedSequence}`;
+    return newId;
+}
 
 // Routes cho các trang HTML tĩnh
 app.get("/", (req, res) => {
@@ -65,6 +91,53 @@ app.get("/products", (req, res) => { res.sendFile(path.join(__dirname, 'public/p
 
 // --- API Routes ---
 
+// Route để tạo ID tự động
+app.get("/api/generate-id/:categoryCode", async (req, res) => {
+    if (!cosmeticsCollection) {
+        return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
+    }
+    const { categoryCode } = req.params;
+
+    if (!categoryCode || categoryCode.length !== 4) {
+        return res.status(400).json({ message: "Mã danh mục không hợp lệ." });
+    }
+
+    try {
+        const nextId = await generateNextProductId(categoryCode.toUpperCase());
+        res.json({ nextId });
+    } catch (err) {
+        console.error(`Lỗi khi tạo ID cho danh mục ${categoryCode}:`, err);
+        res.status(500).json({ message: err.message || "Lỗi máy chủ khi tạo ID sản phẩm." });
+    }
+});
+
+const categoryMap = {
+    SERU: "Serum",
+    KCNG: "Kem Chống Nắng",
+    SRMT: "Sữa Rửa Mặt",
+    TONR: "Toner",
+    KDUG: "Kem Dưỡng",
+    TCHT: "Tinh Chất",
+    TTBC: "Tẩy Tế Bào Chết",
+    XKOG: "Xịt Khoáng",
+    TTRG: "Tẩy Trang",
+    KDMT: "Kem Dưỡng Mắt",
+    MNNG: "Mặt Nạ Ngủ",
+    GDUG: "Gel Dưỡng",
+    BDDA: "Bộ Dưỡng Da",
+    MANA: "Mặt Nạ",
+    STAM: "Sữa Tắm",
+    DDUG: "Dầu Dưỡng",
+    TDAU: "Tinh Dầu",
+    GMUN: "Gel Trị Mụn",
+    KLOT: "Kem Lót"
+};
+
+// Hàm chuyển đổi mã danh mục sang tên đầy đủ
+function getCategoryName(code) {
+    return categoryMap[code] || code;
+}
+
 // Lấy tất cả sản phẩm
 app.get("/dishes", async (req, res) => {
     if (!cosmeticsCollection) {
@@ -72,14 +145,18 @@ app.get("/dishes", async (req, res) => {
     }
     try {
         const products = await cosmeticsCollection.find({}).toArray();
-        res.json(products);
+        const updatedProducts = products.map(product => ({
+            ...product,
+            loai: getCategoryName(product.loai)
+        }));
+        res.json(updatedProducts);
     } catch (err) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", err);
         res.status(500).json({ message: "Lỗi máy chủ khi lấy danh sách sản phẩm!" });
     }
 });
 
-// Lấy một sản phẩm theo 'id' tùy chỉnh
+// Lấy một sản phẩm theo 'id'
 app.get("/dishes/:id", async (req, res) => {
     if (!cosmeticsCollection) {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
@@ -97,120 +174,73 @@ app.get("/dishes/:id", async (req, res) => {
     }
 });
 
-// Thêm sp mới
+// Thêm sản phẩm mới
 app.post('/dishes', async (req, res) => {
     const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
     const file = req.files?.['product-image'];
-  
+
     if (!ten || !moTa || !loai || !thuongHieu || !noiSanXuat || !soLuong || !gia || !file) {
-      return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin!' });
+        return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin!' });
     }
-  
-    const lastProduct = await cosmeticsCollection.find().sort({ id: -1 }).limit(1).toArray();
-    const newId = lastProduct.length > 0
-      ? `SP${(parseInt(lastProduct[0].id.replace('SP', '')) + 1).toString().padStart(3, '0')}`
-      : 'SP001';
-  
-    const fileName = `${newId}_${file.name}`;
-    const filePath = path.join(__dirname, 'public/images/products', fileName);
-  
-    file.mv(filePath, async (err) => {
-      if (err) {
-        console.error('Lỗi khi lưu hình ảnh:', err);
-        return res.status(500).json({ message: 'Lỗi khi lưu hình ảnh!' });
-      }
-  
-      const newProduct = {
-        id: newId,
-        ten,
-        moTa,
-        loai,
-        thuongHieu,
-        noiSanXuat,
-        hinhAnh: fileName,
-        inventory: {
-          quantity: parseInt(soLuong),
-          price: parseInt(gia)
-        },
-        dacTinh: {
-          keyIngredient: dacTinh?.keyIngredient || '',
-          skinConcernTargeted: dacTinh?.skinConcernTargeted || [],
-          texture: dacTinh?.texture || '',
-          scent: dacTinh?.scent || ''
-        },
-        ratings: []
-      };
-  
-      try {
-        await cosmeticsCollection.insertOne(newProduct);
-        res.json({ message: 'Thêm sản phẩm thành công!', product: newProduct });
-      } catch (err) {
+
+    if (typeof loai !== 'string' || loai.length !== 4) {
+        return res.status(400).json({ message: 'Mã danh mục không hợp lệ.' });
+    }
+
+    try {
+        const newId = await generateNextProductId(loai.toUpperCase());
+        const fileName = `${newId}_${file.name}`;
+        const filePath = path.join(__dirname, 'public/images/products', fileName);
+
+        file.mv(filePath, async (err) => {
+            if (err) {
+                console.error('Lỗi khi lưu hình ảnh:', err);
+                return res.status(500).json({ message: 'Lỗi khi lưu hình ảnh!' });
+            }
+
+            const newProduct = {
+                id: newId,
+                ten,
+                moTa,
+                loai,
+                thuongHieu,
+                noiSanXuat,
+                hinhAnh: fileName,
+                inventory: {
+                    quantity: parseInt(soLuong),
+                    price: parseInt(gia)
+                },
+                dacTinh: JSON.parse(dacTinh || '{}'),
+                ratings: []
+            };
+
+            try {
+                await cosmeticsCollection.insertOne(newProduct);
+                res.json({ message: 'Thêm sản phẩm thành công!', product: newProduct });
+            } catch (err) {
+                console.error('Lỗi khi thêm sản phẩm:', err);
+                if (err.code === 11000) {
+                    fs.unlink(filePath, (unlinkErr) => {
+                        if (unlinkErr) console.error(`Lỗi khi xóa file ảnh ${fileName}:`, unlinkErr);
+                    });
+                    return res.status(409).json({ message: `Lỗi: ID sản phẩm '${newId}' đã tồn tại. Vui lòng thử lại.` });
+                }
+                res.status(500).json({ message: 'Lỗi máy chủ khi thêm sản phẩm!' });
+            }
+        });
+    } catch (err) {
         console.error('Lỗi khi thêm sản phẩm:', err);
         res.status(500).json({ message: 'Lỗi máy chủ khi thêm sản phẩm!' });
-      }
-    });
-  });
-
-
-
-
-
-//dặt tính 
-app.post('/dishes', async (req, res) => {
-    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
-    const file = req.files?.['product-image'];
-  
-    if (!ten || !moTa || !loai || !thuongHieu || !noiSanXuat || !soLuong || !gia || !file) {
-      return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin!' });
     }
-  
-    const lastProduct = await cosmeticsCollection.find().sort({ id: -1 }).limit(1).toArray();
-    const newId = lastProduct.length > 0
-      ? `SP${(parseInt(lastProduct[0].id.replace('SP', '')) + 1).toString().padStart(3, '0')}`
-      : 'SP001';
-  
-    const fileName = `${newId}_${file.name}`;
-    const filePath = path.join(__dirname, 'public/images/products', fileName);
-  
-    file.mv(filePath, async (err) => {
-      if (err) {
-        console.error('Lỗi khi lưu hình ảnh:', err);
-        return res.status(500).json({ message: 'Lỗi khi lưu hình ảnh!' });
-      }
-  
-      const newProduct = {
-        id: newId,
-        ten,
-        moTa,
-        loai,
-        thuongHieu,
-        noiSanXuat,
-        hinhAnh: fileName,
-        inventory: {
-          quantity: parseInt(soLuong),
-          price: parseInt(gia)
-        },
-        dacTinh: JSON.parse(dacTinh || '{}'), // Chuyển đổi chuỗi JSON thành đối tượng
-        ratings: []
-      };
-  
-      try {
-        await cosmeticsCollection.insertOne(newProduct);
-        res.json({ message: 'Thêm sản phẩm thành công!', product: newProduct });
-      } catch (err) {
-        console.error('Lỗi khi thêm sản phẩm:', err);
-        res.status(500).json({ message: 'Lỗi máy chủ khi thêm sản phẩm!' });
-      }
-    });
-  });
+});
 
-// Cập nhật sp theo 'id' 
+// Cập nhật sản phẩm theo 'id'
 app.put('/dishes/:id', async (req, res) => {
     if (!cosmeticsCollection) {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
     }
     const { id } = req.params;
-    const { ten, moTa, loai, thuongHieu, origin, quantity, price /*, dacTinh */ } = req.body;
+    const { ten, moTa, loai, thuongHieu, origin, quantity, price, dacTinh } = req.body;
     const file = req.files ? req.files['product-image'] : null;
 
     if (!ten || !moTa || !loai || !thuongHieu || !origin || !quantity || !price) {
@@ -230,7 +260,6 @@ app.put('/dishes/:id', async (req, res) => {
         if (file) {
             const oldFileName = existingProduct.hinhAnh.split('/').pop();
             filePathToDelete = path.join(uploadDir, oldFileName);
-
             const newFileName = `${id}_${file.name}`;
             newFilePath = path.join(uploadDir, newFileName);
             newImagePath = `/images/products/${newFileName}`;
@@ -283,7 +312,6 @@ app.put('/dishes/:id', async (req, res) => {
         }
 
         res.json({ message: 'Cập nhật sản phẩm thành công!', product: result });
-
     } catch (err) {
         console.error(`Lỗi khi cập nhật sản phẩm ${id}:`, err);
         if (err.message && err.message.includes('Lỗi khi lưu hình ảnh mới')) {
@@ -293,7 +321,7 @@ app.put('/dishes/:id', async (req, res) => {
     }
 });
 
-// Xóa sp theo 'id' 
+// Xóa sản phẩm theo 'id'
 app.delete('/dishes/:id', async (req, res) => {
     if (!cosmeticsCollection) {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
@@ -331,14 +359,13 @@ app.delete('/dishes/:id', async (req, res) => {
         }
 
         res.json({ message: "Xóa thành công!", product: productToDelete });
-
     } catch (err) {
         console.error(`Lỗi khi xóa sản phẩm ${id}:`, err);
         res.status(500).json({ message: "Lỗi máy chủ khi xóa sản phẩm!" });
     }
 });
 
-
+// Khởi động server
 connectDB()
     .then(() => {
         app.listen(port, () => {
@@ -349,9 +376,8 @@ connectDB()
     })
     .catch(err => {
         console.error("Không thể khởi động server do lỗi kết nối DB.");
-        process.exit(1); 
+        process.exit(1);
     });
-
 
 process.on('SIGINT', async () => {
     console.log("Đang đóng kết nối MongoDB...");
