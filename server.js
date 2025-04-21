@@ -75,7 +75,6 @@ async function generateNextProductId(categoryCode) {
 // Routes cho các trang HTML tĩnh
 app.get("/", (req, res) => {
     const filePath = path.join(__dirname, 'public/page/admin/products_Management.html');
-    console.log("Resolved file path:", filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
@@ -86,6 +85,7 @@ app.get("/", (req, res) => {
 app.get("/index", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/index.html')); });
 app.get("/add_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/add_product.html')); });
 app.get("/edit_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_product.html')); });
+app.get("/edit_many_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_many_product.html')); });
 app.get("/product_detail", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/product_detail.html')); });
 app.get("/products", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/products.html')); });
 
@@ -370,8 +370,6 @@ connectDB()
     .then(() => {
         app.listen(port, () => {
             console.log(`Ứng dụng đang chạy tại http://localhost:${port}`);
-            console.log(`Truy cập trang quản trị: http://localhost:${port}/`);
-            console.log(`Truy cập trang người dùng: http://localhost:${port}/index`);
         });
     })
     .catch(err => {

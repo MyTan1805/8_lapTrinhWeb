@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chỉnh sửa nhiều sản phẩm - Admin Panel</title>
+  <link rel="stylesheet" href="../../assets/css/admin.css">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .form-group { margin-bottom: 10px; }
+    .btn { padding: 8px 16px; margin-right: 10px; cursor: pointer; }
+    .btn-primary { background-color: #007bff; color: white; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+    .required { color: red; }
+    #loading { color: green; margin-top: 10px; display: none; }
+    .search-bar { display: flex; align-items: center; margin-bottom: 20px; }
+    .search-input { padding: 8px; width: 100%; max-width: 300px; }
+    .search-icon { margin-left: 10px; }
+    .no-results { text-align: center; color: red; }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>ADMIN PANEL</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Sản phẩm
+        <span class="nav-arrow">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </a>
+      <div class="sub-menu">
+        <a href="/" class="sub-item">Tất cả sản phẩm</a>
+        <a href="/add_product" class="sub-item">Thêm sản phẩm</a>
+        <a href="categories.html" class="sub-item">Danh mục</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h1>Chỉnh sửa nhiều sản phẩm</h1>
+        <a href="/" class="btn btn-secondary">Quay lại danh sách</a>
+      </div>
+      <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+        <span class="search-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 16C12.866 16 16 12.866 16 9C16 5.13401 2 5.13401 2 9C2 12.866 5.13401 16 9 16Z" stroke="#666666" stroke-width="2"/>
+            <path d="M14 14L18 18" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </div>
+      <form id="edit-many-form">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên sản phẩm</th>
+              <th>Danh mục</th>
+              <th>Thương hiệu</th>
+              <th>Giá</th>
+              <th>Số lượng tồn</th>
+              <th>Hình ảnh</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
+          <button type="submit" class="btn btn-primary">Cập nhật tất cả</button>
+        </div>
+      </form>
+      <div id="loading">Đang xử lý...</div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <div class="container">
+      <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
+      <a href="/index" class="back-to-home">Trở về trang chủ</a>
+    </div>
+  </footer>
+
+  <script>
+    let products = [];
+    let filteredProducts = [];
+
+    // Lấy danh sách sản phẩm từ endpoint /dishes
+    function fetchProducts() {
+      fetch('/dishes')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Không thể tải danh sách sản phẩm!');
+          }
+          return response.json();
+        })
+        .then(data => {
+          products = data;
+          filteredProducts = [...products];
+          renderProducts();
+        })
+        .catch(error => {
+          console.error("Lỗi khi tải dữ liệu:", error);
+          alert(error.message);
+        });
+    }
+
+    // Hiển thị danh sách sản phẩm trong bảng
+    function renderProducts() {
+      const tbody = document.getElementById('productTableBody');
+      tbody.innerHTML = '';
+
+      if (filteredProducts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="no-results">Không tìm thấy sản phẩm</td></tr>';
+        return;
+      }
+
+      filteredProducts.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.id}</td>
+          <td><input type="text" name="ten_${product.id}" value="${product.ten}" required></td>
+          <td>
+            <select name="loai_${product.id}" required>
+              <option value="">Chọn danh mục</option>
+              <option value="Serum" ${product.loai === 'Serum' ? 'selected' : ''}>Serum</option>
+              <option value="Kem Chống Nắng" ${product.loai === 'Kem Chống Nắng' ? 'selected' : ''}>Kem Chống Nắng</option>
+              <option value="Sữa Rửa Mặt" ${product.loai === 'Sữa Rửa Mặt' ? 'selected' : ''}>Sữa Rửa Mặt</option>
+              <option value="Toner" ${product.loai === 'Toner' ? 'selected' : ''}>Toner</option>
+              <option value="Kem Dưỡng" ${product.loai === 'Kem Dưỡng' ? 'selected' : ''}>Kem Dưỡng</option>
+              <option value="Tinh Chất" ${product.loai === 'Tinh Chất' ? 'selected' : ''}>Tinh Chất</option>
+              <option value="Tẩy Tế Bào Chết" ${product.loai === 'Tẩy Tế Bào Chết' ? 'selected' : ''}>Tẩy Tế Bào Chết</option>
+              <option value="Xịt Khoáng" ${product.loai === 'Xịt Khoáng' ? 'selected' : ''}>Xịt Khoáng</option>
+              <option value="Tẩy Trang" ${product.loai === 'Tẩy Trang' ? 'selected' : ''}>Tẩy Trang</option>
+              <option value="Kem Dưỡng Mắt" ${product.loai === 'Kem Dưỡng Mắt' ? 'selected' : ''}>Kem Dưỡng Mắt</option>
+              <option value="Mặt Nạ Ngủ" ${product.loai === 'Mặt Nạ Ngủ' ? 'selected' : ''}>Mặt Nạ Ngủ</option>
+              <option value="Gel Dưỡng" ${product.loai === 'Gel Dưỡng' ? 'selected' : ''}>Gel Dưỡng</option>
+              <option value="Bộ Dưỡng Da" ${product.loai === 'Bộ Dưỡng Da' ? 'selected' : ''}>Bộ Dưỡng Da</option>
+              <option value="Mặt Nạ" ${product.loai === 'Mặt Nạ' ? 'selected' : ''}>Mặt Nạ</option>
+              <option value="Sữa Tắm" ${product.loai === 'Sữa Tắm' ? 'selected' : ''}>Sữa Tắm</option>
+              <option value="Dầu Dưỡng" ${product.loai === 'Dầu Dưỡng' ? 'selected' : ''}>Dầu Dưỡng</option>
+              <option value="Tinh Dầu" ${product.loai === 'Tinh Dầu' ? 'selected' : ''}>Tinh Dầu</option>
+              <option value="Gel Trị Mụn" ${product.loai === 'Gel Trị Mụn' ? 'selected' : ''}>Gel Trị Mụn</option>
+              <option value="Kem Lót" ${product.loai === 'Kem Lót' ? 'selected' : ''}>Kem Lót</option>
+            </select>
+          </td>
+          <td><input type="text" name="thuongHieu_${product.id}" value="${product.thuongHieu}" required></td>
+          <td><input type="number" name="gia_${product.id}" value="${product.inventory.price}" min="0" required></td>
+          <td><input type="number" name="soLuong_${product.id}" value="${product.inventory.quantity}" min="0" required></td>
+          <td>
+            <input type="file" name="hinhAnh_${product.id}" accept="image/*">
+            <img src="../../images/products/${product.hinhAnh}" alt="${product.ten}" style="width: 50px;">
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Xử lý tìm kiếm
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const searchTerm = e.target.value.toLowerCase();
+        filteredProducts = products.filter(product =>
+          product.ten.toLowerCase().includes(searchTerm) ||
+          product.loai.toLowerCase().includes(searchTerm)
+        );
+        renderProducts();
+      }, 300);
+    });
+
+    // Xử lý submit form
+    document.getElementById('edit-many-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!confirm('Bạn có chắc chắn muốn cập nhật tất cả sản phẩm?')) {
+        return;
+      }
+      document.getElementById('loading').style.display = 'block';
+
+      const formData = new FormData(e.target);
+      const updatedProducts = [];
+
+      const rows = document.querySelectorAll('#productTableBody tr');
+      rows.forEach(row => {
+        const id = row.cells[0].textContent;
+        const updatedProduct = {
+          id,
+          ten: formData.get(`ten_${id}`),
+          loai: formData.get(`loai_${id}`),
+          thuongHieu: formData.get(`thuongHieu_${id}`),
+          inventory: {
+            price: parseFloat(formData.get(`gia_${id}`)),
+            quantity: parseInt(formData.get(`soLuong_${id}`))
+          },
+          hinhAnh: formData.get(`hinhAnh_${id}`)
+        };
+        updatedProducts.push(updatedProduct);
+      });
+
+      Promise.allSettled(updatedProducts.map(product => {
+        const formData = new FormData();
+        formData.append('ten', product.ten);
+        formData.append('loai', product.loai);
+        formData.append('thuongHieu', product.thuongHieu);
+        formData.append('gia', product.inventory.price);
+        formData.append('soLuong', product.inventory.quantity);
+        if (product.hinhAnh) {
+          formData.append('hinhAnh', product.hinhAnh);
+        }
+
+        return fetch(`/dishes/${product.id}`, {
+          method: 'PATCH',
+          body: formData
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error(`Cập nhật sản phẩm ${product.id} thất bại!`);
+          }
+          return response.json();
+        });
+      }))
+        .then(results => {
+          const errors = results.filter(r => r.status === 'rejected').map(r => r.reason);
+          if (errors.length > 0) {
+            alert(`Có ${errors.length} sản phẩm cập nhật thất bại: ${errors.join(', ')}`);
+          } else {
+            alert('Cập nhật tất cả sản phẩm thành công!');
+            window.location.href = '/';
+          }
+        })
+        .catch(error => {
+          console.error("Lỗi khi cập nhật:", error);
+          alert(error.message);
+        })
+        .finally(() => {
+          document.getElementById('loading').style.display = 'none';
+        });
+    });
+
+    // Khởi chạy
+    fetchProducts();
+  </script>
+  <script src="../../assets/js/admin.js"></script>
+</body>
+</html>
