@@ -21,6 +21,41 @@
     .attribute-row input {
       flex: 1;
     }
+    .mode-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+    .mode-content {
+      display: block;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .table th, .table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .table th {
+      background-color: #f2f2f2;
+    }
+    .error-row {
+      background-color: #ffe6e6;
+    }
   </style>
 </head>
 <body>
@@ -58,114 +93,156 @@
         <h1>Thêm sản phẩm mới</h1>
         <a href="/" class="btn btn-secondary">Quay lại danh sách</a>
       </div>
-      <form class="add-product-form" enctype="multipart/form-data">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-category">Danh mục <span class="required">*</span></label>
-            <select id="product-category" name="loai" required>
-              <option value="">Chọn danh mục</option>
-              <option value="SERU">Serum</option>
-              <option value="KCNG">Kem Chống Nắng</option>
-              <option value="SRMT">Sữa Rửa Mặt</option>
-              <option value="TONR">Toner</option>
-              <option value="KDUG">Kem Dưỡng</option>
-              <option value="TCHT">Tinh Chất</option>
-              <option value="TTBC">Tẩy Tế Bào Chết</option>
-              <option value="XKOG">Xịt Khoáng</option>
-              <option value="TTRG">Tẩy Trang</option>
-              <option value="KDMT">Kem Dưỡng Mắt</option>
-              <option value="MNNG">Mặt Nạ Ngủ</option>
-              <option value="GDUG">Gel Dưỡng</option>
-              <option value="BDDA">Bộ Dưỡng Da</option>
-              <option value="MANA">Mặt Nạ</option>
-              <option value="STAM">Sữa Tắm</option>
-              <option value="DDUG">Dầu Dưỡng</option>
-              <option value="TDAU">Tinh Dầu</option>
-              <option value="GMUN">Gel Trị Mụn</option>
-              <option value="KLOT">Kem Lót</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="product-id">ID sản phẩm <span class="required">*</span></label>
-            <input type="text" id="product-id" name="id" placeholder="Chọn danh mục để tạo ID" readonly required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-name">Tên sản phẩm <span class="required">*</span></label>
-            <input type="text" id="product-name" name="ten" placeholder="Nhập tên sản phẩm" required>
-          </div>
-          <div class="form-group">
-            <label for="product-description">Mô tả <span class="required">*</span></label>
-            <textarea id="product-description" name="moTa" placeholder="Nhập mô tả sản phẩm chi tiết" required></textarea>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-brand">Thương hiệu <span class="required">*</span></label>
-            <input type="text" id="product-brand" name="thuongHieu" placeholder="Nhập thương hiệu" required>
-          </div>
-          <div class="form-group">
-            <label for="product-origin">Nơi sản xuất <span class="required">*</span></label>
-            <input type="text" id="product-origin" name="noiSanXuat" placeholder="Nhập nơi sản xuất" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-stock">Số lượng tồn kho <span class="required">*</span></label>
-            <input type="number" id="product-stock" name="soLuong" placeholder="0" min="0" required>
-          </div>
-          <div class="form-group">
-            <label for="product-price">Giá <span class="required">*</span></label>
-            <input type="number" id="product-price" name="gia" placeholder="0" min="0" required>
-            <small>Đề nghị không khuyến mãi</small>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-image">Hình ảnh <span class="required">*</span></label>
-            <input type="file" id="product-image" name="product-image" accept="image/*" required>
-            <div class="image-preview" id="image-preview">
-              <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
+
+      <!-- Tabs chuyển đổi chế độ -->
+      <div class="mode-tabs">
+        <button class="tab-btn active" data-mode="single">Tạo một sản phẩm</button>
+        <button class="tab-btn" data-mode="multiple">Tạo nhiều sản phẩm (Import JSON)</button>
+      </div>
+
+      <!-- Form tạo một sản phẩm -->
+      <div id="single-product-form" class="mode-content">
+        <form class="add-product-form" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-category">Danh mục <span class="required">*</span></label>
+              <select id="product-category" name="loai" required>
+                <option value="">Chọn danh mục</option>
+                <option value="SERU">Serum</option>
+                <option value="KCNG">Kem Chống Nắng</option>
+                <option value="SRMT">Sữa Rửa Mặt</option>
+                <option value="TONR">Toner</option>
+                <option value="KDUG">Kem Dưỡng</option>
+                <option value="TCHT">Tinh Chất</option>
+                <option value="TTBC">Tẩy Tế Bào Chết</option>
+                <option value="XKOG">Xịt Khoáng</option>
+                <option value="TTRG">Tẩy Trang</option>
+                <option value="KDMT">Kem Dưỡng Mắt</option>
+                <option value="MNNG">Mặt Nạ Ngủ</option>
+                <option value="GDUG">Gel Dưỡng</option>
+                <option value="BDDA">Bộ Dưỡng Da</option>
+                <option value="MANA">Mặt Nạ</option>
+                <option value="STAM">Sữa Tắm</option>
+                <option value="DDUG">Dầu Dưỡng</option>
+                <option value="TDAU">Tinh Dầu</option>
+                <option value="GMUN">Gel Trị Mụn</option>
+                <option value="KLOT">Kem Lót</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="product-id">ID sản phẩm <span class="required">*</span></label>
+              <input type="text" id="product-id" name="id" placeholder="Chọn danh mục để tạo ID" readonly required>
             </div>
           </div>
-        </div>
-        <!-- Đặt Tính -->
-        <div class="form-row">
-          <div class="form-group">
-            <div id="custom-attributes">
-              <div class="form-group">
-                <label for="key-ingredient">Thành phần chính</label>
-                <input type="text" id="key-ingredient" name="keyIngredient" placeholder="Nhập thành phần chính">
-              </div>
-              <div class="form-group">
-                <label for="skin-concern">Vấn đề da cần giải quyết</label>
-                <input type="text" id="skin-concern" name="skinConcernTargeted" placeholder="Nhập các vấn đề da (phân cách bằng dấu phẩy)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-name">Tên sản phẩm <span class="required">*</span></label>
+              <input type="text" id="product-name" name="ten" placeholder="Nhập tên sản phẩm" required>
+            </div>
+            <div class="form-group">
+              <label for="product-description">Mô tả <span class="required">*</span></label>
+              <textarea id="product-description" name="moTa" placeholder="Nhập mô tả sản phẩm chi tiết" required></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-brand">Thương hiệu <span class="required">*</span></label>
+              <input type="text" id="product-brand" name="thuongHieu" placeholder="Nhập thương hiệu" required>
+            </div>
+            <div class="form-group">
+              <label for="product-origin">Nơi sản xuất <span class="required">*</span></label>
+              <input type="text" id="product-origin" name="noiSanXuat" placeholder="Nhập nơi sản xuất" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-stock">Số lượng tồn kho <span class="required">*</span></label>
+              <input type="number" id="product-stock" name="soLuong" placeholder="0" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="product-price">Giá <span class="required">*</span></label>
+              <input type="number" id="product-price" name="gia" placeholder="0" min="0" required>
+              <small>Đề nghị không khuyến mãi</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-image">Hình ảnh <span class="required">*</span></label>
+              <input type="file" id="product-image" name="product-image" accept="image/*" required>
+              <div class="image-preview" id="image-preview">
+                <img id="preview-img" src="" alt="Hình ảnh sản phẩm" style="display: none;">
               </div>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <div class="form-group">
-              <label for="texture">Kết cấu</label>
-              <input type="text" id="texture" name="texture" placeholder="Nhập kết cấu sản phẩm">
-            </div>
-            <div class="form-group">
-              <label for="scent">Mùi hương</label>
-              <input type="text" id="scent" name="scent" placeholder="Nhập mùi hương">
-            </div>
           </div>
-        </div>
-        <div class="form-row">
+          <!-- Đặc tính -->
+          <div class="form-row">
             <div class="form-group">
+              <div id="custom-attributes">
+                <div class="form-group">
+                  <label for="key-ingredient">Thành phần chính</label>
+                  <input type="text" id="key-ingredient" name="keyIngredient" placeholder="Nhập thành phần chính">
+                </div>
+                <div class="form-group">
+                  <label for="skin-concern">Vấn đề da cần giải quyết</label>
+                  <input type="text" id="skin-concern" name="skinConcernTargeted" placeholder="Nhập các vấn đề da (phân cách bằng dấu phẩy)">
+                </div>
+                <div class="form-group">
+                  <label for="texture">Kết cấu</label>
+                  <input type="text" id="texture" name="texture" placeholder="Nhập kết cấu sản phẩm">
+                </div>
+                <div class="form-group">
+                  <label for="scent">Mùi hương</label>
+                  <input type="text" id="scent" name="scent" placeholder="Nhập mùi hương">
+                </div>
+              </div>
               <button type="button" id="add-attribute" class="btn btn-secondary">Thêm đặc tính</button>
             </div>
           </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
-          <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
-        </div>
-      </form>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
+            <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Form tạo nhiều sản phẩm -->
+      <div id="multiple-product-form" class="mode-content" style="display: none;">
+        <form class="import-json-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <button type="button" id="download-template" class="btn btn-secondary">Tải mẫu JSON</button>
+          </div>
+          <div class="form-group">
+            <label for="json-file">Tải lên file JSON <span class="required">*</span></label>
+            <input type="file" id="json-file" name="json-file" accept=".json" required>
+          </div>
+          <div class="form-group">
+            <label for="image-files">Tải lên các file hình ảnh</label>
+            <input type="file" id="image-files" name="image-files" accept="image/*" multiple>
+          </div>
+          <div class="form-group">
+            <h3>Danh sách sản phẩm (Preview)</h3>
+            <table id="preview-table" class="table">
+              <thead>
+                <tr>
+                  <th>Tên sản phẩm</th>
+                  <th>Thương hiệu</th>
+                  <th>Danh mục</th>
+                  <th>Số lượng</th>
+                  <th>Giá</th>
+                  <th>Hình ảnh</th>
+                  <th>Thành phần chính</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Hủy</button>
+            <button type="submit" class="btn btn-primary" id="confirm-import" disabled>Xác nhận tạo nhiều sản phẩm</button>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 
@@ -232,18 +309,18 @@
       const attributeRow = document.createElement('div');
       attributeRow.classList.add('attribute-row');
       attributeRow.innerHTML = `
-        <input type="text" class="attribute-key" placeholder="Tên đặc tính " required>
-        <input type="text" class="attribute-value" placeholder="Dung tích " required>
+        <input type="text" class="attribute-key" placeholder="Tên đặc tính" required>
+        <input type="text" class="attribute-value" placeholder="Dung tích" required>
         <button type="button" class="remove-attribute btn btn-danger m-5">Xóa</button>
       `;
-      attributeRow.style.marginTop= '15px'; // Thêm margin dưới 15px
+      attributeRow.style.marginTop = '15px';
       attributeRow.querySelector('.remove-attribute').addEventListener('click', () => {
         customAttributes.removeChild(attributeRow);
       });
       customAttributes.appendChild(attributeRow);
     });
 
-    // Xử lý submit form
+    // Xử lý submit form tạo một sản phẩm
     document.querySelector('.add-product-form').addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -257,23 +334,16 @@
       formData.append('gia', document.getElementById('product-price').value);
       formData.append('product-image', document.getElementById('product-image').files[0]);
 
-      // Thu thập đặc tính
       const attributes = {};
-
-      // Đặc tính cố định
       const keyIngredient = document.getElementById('key-ingredient').value.trim();
       if (keyIngredient) attributes['Thành phần chính'] = keyIngredient;
-
       const skinConcern = document.getElementById('skin-concern').value.trim();
       if (skinConcern) attributes['Vấn đề da'] = skinConcern;
-
       const texture = document.getElementById('texture').value.trim();
       if (texture) attributes['Kết cấu'] = texture;
-
       const scent = document.getElementById('scent').value.trim();
       if (scent) attributes['Mùi hương'] = scent;
 
-      // Đặc tính tùy chỉnh
       document.querySelectorAll('.attribute-row').forEach(row => {
         const key = row.querySelector('.attribute-key').value.trim();
         const value = row.querySelector('.attribute-value').value.trim();
@@ -302,6 +372,216 @@
           console.error('Lỗi khi thêm sản phẩm:', error);
           alert(error.message);
         });
+    });
+
+    // Chuyển đổi chế độ
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const modeContents = document.querySelectorAll('.mode-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        modeContents.forEach(content => content.style.display = 'none');
+        document.getElementById(`${button.dataset.mode}-product-form`).style.display = 'block';
+      });
+    });
+
+    // Xử lý tạo nhiều sản phẩm
+    const jsonFileInput = document.getElementById('json-file');
+    const previewTableBody = document.querySelector('#preview-table tbody');
+    const confirmImportBtn = document.getElementById('confirm-import');
+    let products = [];
+
+    // Hàm kiểm tra tính hợp lệ của một sản phẩm
+    function validateProduct(product) {
+      const requiredFields = ['ten', 'thuongHieu', 'loai', 'noiSanXuat', 'soLuong', 'gia', 'hinhAnh'];
+      const errors = [];
+
+      requiredFields.forEach(field => {
+        if (!product[field] && product[field] !== 0) {
+          errors.push(`- Thiếu ${field}`);
+        }
+      });
+
+      if (product.loai && (typeof product.loai !== 'string' || product.loai.length !== 4)) {
+        errors.push(`- Danh mục (${product.loai}) không hợp lệ, phải là mã 4 ký tự (ví dụ: SERU)`);
+      }
+
+      if (product.soLuong || product.soLuong === 0) {
+        const quantity = parseInt(product.soLuong);
+        if (isNaN(quantity) || quantity < 0) {
+          errors.push(`- Số lượng (${product.soLuong}) phải là số không âm`);
+        }
+      }
+
+      if (product.gia || product.gia === 0) {
+        const price = parseInt(product.gia);
+        if (isNaN(price) || price < 0) {
+          errors.push(`- Giá (${product.gia}) phải là số không âm`);
+        }
+      }
+
+      return {
+        isValid: errors.length === 0,
+        errors: errors.length > 0 ? errors : null
+      };
+    }
+
+    jsonFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        products = JSON.parse(text);
+        if (!Array.isArray(products)) throw new Error('File JSON phải chứa một mảng sản phẩm.');
+
+        previewTableBody.innerHTML = '';
+        const validationErrors = [];
+
+        products.forEach((product, index) => {
+          const validation = validateProduct(product);
+          const row = document.createElement('tr');
+          if (!validation.isValid) {
+            row.classList.add('error-row');
+            validationErrors.push(`Sản phẩm "${product.ten || 'Không xác định'}":\n${validation.errors.join('\n')}`);
+          }
+
+          row.innerHTML = `
+            <td contenteditable="true" data-field="ten">${product.ten || '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="thuongHieu">${product.thuongHieu || '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="loai">${product.loai || '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="soLuong">${product.soLuong ?? '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="gia">${product.gia ?? '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="hinhAnh">${product.hinhAnh || '<span style="color: red;">Thiếu</span>'}</td>
+            <td contenteditable="true" data-field="dacTinh.keyIngredient">${product.dacTinh?.keyIngredient || 'Không có'}</td>
+            <td><button type="button" class="remove-row btn btn-danger">Xóa</button></td>
+          `;
+          row.dataset.index = index;
+          previewTableBody.appendChild(row);
+        });
+
+        if (validationErrors.length > 0) {
+          alert(`Có lỗi trong file JSON:\n\n${validationErrors.join('\n\n')}\n\nVui lòng chỉnh sửa dữ liệu trong bảng hoặc tải lên file JSON mới.`);
+        }
+
+        previewTableBody.addEventListener('input', (e) => {
+          const row = e.target.closest('tr');
+          const index = row.dataset.index;
+          const field = e.target.dataset.field;
+          let value = e.target.innerText.trim();
+
+          if (field === 'soLuong' || field === 'gia') {
+            value = parseInt(value);
+            if (isNaN(value) || value < 0) {
+              e.target.innerHTML = '<span style="color: red;">Số không hợp lệ</span>';
+              value = null;
+            }
+          }
+
+          if (field.includes('dacTinh.')) {
+            const subField = field.split('.')[1];
+            if (!products[index].dacTinh) products[index].dacTinh = {};
+            products[index].dacTinh[subField] = value;
+          } else {
+            products[index][field] = value;
+          }
+
+          const validation = validateProduct(products[index]);
+          row.classList.toggle('error-row', !validation.isValid);
+          confirmImportBtn.disabled = products.some(product => !validateProduct(product).isValid);
+        });
+
+        confirmImportBtn.disabled = products.some(product => !validateProduct(product).isValid);
+
+        document.querySelectorAll('.remove-row').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const row = e.target.closest('tr');
+            const index = row.dataset.index;
+            products.splice(index, 1);
+            row.remove();
+            confirmImportBtn.disabled = products.length === 0 || products.some(product => !validateProduct(product).isValid);
+          });
+        });
+      } catch (error) {
+        console.error('Lỗi khi xử lý file JSON:', error);
+        alert(`Lỗi: ${error.message}`);
+        previewTableBody.innerHTML = '';
+        confirmImportBtn.disabled = true;
+      }
+    });
+
+    // Xử lý submit form tạo nhiều sản phẩm
+    document.querySelector('.import-json-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const jsonFile = document.getElementById('json-file').files[0];
+      const imageFiles = document.getElementById('image-files').files;
+
+      if (!jsonFile) {
+        alert('Vui lòng tải lên file JSON.');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('products', JSON.stringify(products));
+        for (const file of imageFiles) {
+          formData.append('image-files', file);
+        }
+
+        const response = await fetch('/dishes/bulk', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Lỗi khi tạo nhiều sản phẩm.');
+        }
+
+        const data = await response.json();
+        let message = data.message;
+        if (data.errors && data.errors.length > 0) {
+          message += '\nLỗi:\n' + data.errors.map(e => `- ${e.product}: ${e.message}`).join('\n');
+        }
+        alert(message);
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Lỗi khi tạo nhiều sản phẩm:', error);
+        alert(`Lỗi: ${error.message}`);
+      }
+    });
+
+    // Tải mẫu JSON
+    document.getElementById('download-template').addEventListener('click', () => {
+      const template = [
+        {
+          ten: "Tên sản phẩm",
+          moTa: "Mô tả sản phẩm",
+          loai: "SERU",
+          thuongHieu: "Thương hiệu",
+          noiSanXuat: "Nơi sản xuất",
+          soLuong: 0,
+          gia: 0,
+          hinhAnh: "tên_file_ảnh.jpg",
+          dacTinh: {
+            keyIngredient: "Thành phần chính",
+            skinConcernTargeted: "Vấn đề da",
+            texture: "Kết cấu",
+            scent: "Mùi hương"
+          }
+        }
+      ];
+      const dataStr = JSON.stringify(template, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'product_template.json';
+      link.click();
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>

@@ -187,6 +187,12 @@ app.post('/dishes', async (req, res) => {
         return res.status(400).json({ message: 'Mã danh mục không hợp lệ.' });
     }
 
+    const quantity = parseInt(soLuong);
+    const price = parseInt(gia);
+    if (isNaN(quantity) || quantity < 0 || isNaN(price) || price < 0) {
+        return res.status(400).json({ message: 'Số lượng và giá phải là số không âm!' });
+    }
+
     try {
         const newId = await generateNextProductId(loai.toUpperCase());
         const fileName = `${newId}_${file.name}`;
@@ -207,8 +213,8 @@ app.post('/dishes', async (req, res) => {
                 noiSanXuat,
                 hinhAnh: fileName,
                 inventory: {
-                    quantity: parseInt(soLuong),
-                    price: parseInt(gia)
+                    quantity: quantity,
+                    price: price
                 },
                 dacTinh: JSON.parse(dacTinh || '{}'),
                 ratings: []
@@ -234,6 +240,142 @@ app.post('/dishes', async (req, res) => {
     }
 });
 
+
+// Thêm nhiều sản phẩm từ file JSON
+app.post('/dishes/bulk', async (req, res) => {
+    if (!cosmeticsCollection) {
+        return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
+    }
+
+    try {
+        const { products } = req.body;
+        const imageFiles = req.files ? req.files['image-files'] : [];
+
+        if (!products) {
+            return res.status(400).json({ message: 'Vui lòng cung cấp danh sách sản phẩm.' });
+        }
+
+        let parsedProducts;
+        try {
+            parsedProducts = JSON.parse(products);
+            if (!Array.isArray(parsedProducts)) {
+                return res.status(400).json({ message: 'Dữ liệu sản phẩm phải là một mảng.' });
+            }
+        } catch (error) {
+            return res.status(400).json({ message: 'Dữ liệu JSON không hợp lệ.' });
+        }
+
+        const createdProducts = [];
+        const errors = [];
+        const productsToInsert = [];
+
+        for (const product of parsedProducts) {
+            const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, hinhAnh, dacTinh } = product;
+
+            // Kiểm tra các trường bắt buộc
+            const missingFields = [];
+            if (!ten) missingFields.push('ten');
+            if (!moTa) missingFields.push('moTa');
+            if (!loai) missingFields.push('loai');
+            if (!thuongHieu) missingFields.push('thuongHieu');
+            if (!noiSanXuat) missingFields.push('noiSanXuat');
+            if (soLuong === undefined || soLuong === null) missingFields.push('soLuong');
+            if (gia === undefined || gia === null) missingFields.push('gia');
+            if (!hinhAnh) missingFields.push('hinhAnh');
+
+            if (missingFields.length > 0) {
+                errors.push({ product: ten || 'Không xác định', message: `Thiếu các trường: ${missingFields.join(', ')}.` });
+                continue;
+            }
+
+            // Kiểm tra định dạng danh mục
+            if (typeof loai !== 'string' || loai.length !== 4) {
+                errors.push({ product: ten, message: 'Mã danh mục không hợp lệ.' });
+                continue;
+            }
+
+            // Kiểm tra kiểu dữ liệu và giá trị của soLuong và gia
+            const quantity = parseInt(soLuong);
+            const price = parseInt(gia);
+            if (isNaN(quantity) || quantity < 0) {
+                errors.push({ product: ten, message: `Số lượng (${soLuong}) phải là số không âm.` });
+                continue;
+            }
+            if (isNaN(price) || price < 0) {
+                errors.push({ product: ten, message: `Giá (${gia}) phải là số không âm.` });
+                continue;
+            }
+
+            try {
+                const newId = await generateNextProductId(loai.toUpperCase());
+                const imageFile = Array.isArray(imageFiles) 
+                    ? imageFiles.find(f => f.name === hinhAnh)
+                    : (imageFiles && imageFiles.name === hinhAnh ? imageFiles : null);
+                if (!imageFile) {
+                    errors.push({ product: ten, message: `Không tìm thấy file ảnh '${hinhAnh}'.` });
+                    continue;
+                }
+
+                const fileName = `${newId}_${imageFile.name}`;
+                const filePath = path.join(uploadDir, fileName);
+                await imageFile.mv(filePath);
+
+                const newProduct = {
+                    id: newId,
+                    ten,
+                    moTa,
+                    loai,
+                    thuongHieu,
+                    noiSanXuat,
+                    hinhAnh: fileName,
+                    inventory: {
+                        quantity: quantity,
+                        price: price
+                    },
+                    dacTinh: dacTinh || {},
+                    ratings: []
+                };
+
+                productsToInsert.push(newProduct);
+                createdProducts.push(newProduct);
+            } catch (err) {
+                console.error(`Lỗi khi xử lý sản phẩm ${ten}:`, err);
+                errors.push({ product: ten, message: err.message || 'Lỗi khi xử lý sản phẩm.' });
+            }
+        }
+
+        if (productsToInsert.length > 0) {
+            try {
+                await cosmeticsCollection.insertMany(productsToInsert, { ordered: false });
+            } catch (err) {
+                console.error('Lỗi khi thêm nhiều sản phẩm:', err);
+                for (const product of productsToInsert) {
+                    const filePath = path.join(uploadDir, product.hinhAnh);
+                    if (fs.existsSync(filePath)) {
+                        fs.unlink(filePath, (unlinkErr) => {
+                            if (unlinkErr) console.error(`Lỗi khi xóa file ảnh ${product.hinhAnh}:`, unlinkErr);
+                        });
+                    }
+                }
+                return res.status(500).json({ message: 'Lỗi khi lưu sản phẩm vào database.', errors });
+            }
+        }
+
+        if (createdProducts.length === 0 && errors.length > 0) {
+            return res.status(400).json({ message: 'Không thể tạo bất kỳ sản phẩm nào.', errors });
+        }
+
+        res.json({
+            message: `Đã tạo thành công ${createdProducts.length} sản phẩm.`,
+            createdProducts,
+            errors: errors.length > 0 ? errors : undefined
+        });
+    } catch (err) {
+        console.error('Lỗi khi tạo nhiều sản phẩm:', err);
+        res.status(500).json({ message: 'Lỗi máy chủ khi tạo nhiều sản phẩm.' });
+    }
+});
+
 // Cập nhật sản phẩm theo 'id'
 app.put('/dishes/:id', async (req, res) => {
     if (!cosmeticsCollection) {
@@ -245,6 +387,12 @@ app.put('/dishes/:id', async (req, res) => {
 
     if (!ten || !moTa || !loai || !thuongHieu || !origin || !quantity || !price) {
         return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin (Tên, Mô tả, Loại, Thương hiệu, Xuất xứ, Số lượng, Giá)!' });
+    }
+
+    const parsedQuantity = parseInt(quantity);
+    const parsedPrice = parseInt(price);
+    if (isNaN(parsedQuantity) || parsedQuantity < 0 || isNaN(parsedPrice) || parsedPrice < 0) {
+        return res.status(400).json({ message: 'Số lượng và giá phải là số không âm!' });
     }
 
     try {
@@ -283,8 +431,8 @@ app.put('/dishes/:id', async (req, res) => {
             thuongHieu: thuongHieu,
             hinhAnh: newImagePath,
             'inventory.origin': origin,
-            'inventory.quantity': parseInt(quantity),
-            'inventory.price': parseInt(price),
+            'inventory.quantity': parsedQuantity,
+            'inventory.price': parsedPrice,
             'dacTinh': dacTinh,
             updatedAt: new Date()
         };
@@ -364,6 +512,7 @@ app.delete('/dishes/:id', async (req, res) => {
         res.status(500).json({ message: "Lỗi máy chủ khi xóa sản phẩm!" });
     }
 });
+
 
 // Khởi động server
 connectDB()
