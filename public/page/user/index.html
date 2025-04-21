@@ -3,103 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trang chủ - Mỹ phẩm Việt Nam</title>
-  <link rel="stylesheet" href="../../assets/css/user.css">
+  <title>Trang Quản Trị - Admin Dashboard</title>
+  <link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <div class="logo">
-        <!-- Tăng kích thước logo trong header nếu cần -->
-        <img src="../../images/logo.png" alt="Logo" class="header-logo" > <!-- Ví dụ tăng chiều rộng logo -->
-      </div>
-      <nav>
-        <a href="/index" class="active">Trang chủ</a>
-        <div class="dropdown">
-          <a href="/products">Sản phẩm
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="2"/>
-            </svg>
-          </a>
-          <div class="dropdown-content">
-            <a href="/products?category=kem-chong-nang">Kem chống nắng</a>
-            <a href="/products?category=sua-rua-mat">Sữa rửa mặt</a>
-            <a href="/products?category=son-moi">Son môi</a>
-          </div>
-        </div>
-        <a href="account.html">Tài khoản</a>
-      </nav>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>ADMIN PANEL</h2>
     </div>
-  </header>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a href="products_Management" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Sản phẩm
+        <span class="nav-arrow">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </a>
+      <div class="sub-menu">
+        <a href="products_Management" class="sub-item">Tất cả sản phẩm</a>
+        <a href="add_product" class="sub-item">Thêm sản phẩm</a>
+        <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
+        <a href="categories.html" class="sub-item">Danh mục</a>
+      </div>
+    </nav>
+  </aside>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!-- Main Content -->
+  <main class="main-content">
     <div class="container">
-      <div class="hero-left">
-        <h1>Khám phá vẻ đẹp tự nhiên với mỹ phẩm Việt Nam</h1>
-        <p>Chăm sóc làn da của bạn với các sản phẩm an toàn, chất lượng cao, được làm từ thiên nhiên.</p>
-        <a href="/products" class="btn">Tìm hiểu ngay</a>
+      <div class="page-header">
+        <h1>Trang Quản Trị</h1>
       </div>
-      <div class="hero-right">
-        <img src="../../images/hero-image.jpg" alt="Hero Image">
-        <div class="shapes">
-          <div class="circle"></div>
-          <div class="semicircle"></div>
-          <div class="wave"></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <section id="about-us" class="about-us">
-    <div class="container">
-      <h2>Về Chúng Tôi</h2>
-      <p style="max-width: 700px; margin: 0 auto 40px auto; color: #666;">
-        Chúng tôi là đội ngũ đam mê mang đến những sản phẩm mỹ phẩm Việt Nam chất lượng và an toàn đến tay người tiêu dùng.
-      </p>
-      <div class="team-grid">
-        <div class="team-member">
-          <img src="../../images/team/member1.jpg" alt="Tên Thành Viên 1"> <!-- Thay đổi đường dẫn ảnh -->
-          <h3>Nguyễn Văn A</h3>
-          <p class="role">Trưởng nhóm / Backend Developer</p>
-          <p class="bio">Chịu trách nhiệm chính về kiến trúc hệ thống và phát triển logic phía máy chủ.</p>
-        </div>
-        <div class="team-member">
-          <img src="../../images/team/member2.jpg" alt="Tên Thành Viên 2"> <!-- Thay đổi đường dẫn ảnh -->
-          <h3>Trần Thị B</h3>
-          <p class="role">Frontend Developer / UI Designer</p>
-           <p class="bio">Thiết kế giao diện người dùng và hiện thực hóa trải nghiệm trên trang web.</p>
-        </div>
-        <div class="team-member">
-          <img src="../../images/team/member3.jpg" alt="Tên Thành Viên 3"> <!-- Thay đổi đường dẫn ảnh -->
-          <h3>Lê Văn C</h3>
-          <p class="role">Content & Marketing</p>
-           <p class="bio">Phụ trách nội dung sản phẩm, chiến lược quảng bá và tương tác khách hàng.</p>
-        </div>
+      <!-- Phần giới thiệu -->
+      <div class="intro-section">
+        <h2>Khám phá vẻ đẹp tự nhiên</h2>
+        <p>Chào mừng đến với trang quản trị của Mỹ Phẩm Việt Nam - nơi mang đến những sản phẩm chăm sóc sắc đẹp từ thiên nhiên, thuần Việt. Quản lý sản phẩm, danh mục và hơn thế nữa ngay tại đây!</p>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="dashboard">
+        <a href="products_Management" class="dashboard-item">
+          <h3>Quản lý sản phẩm</h3>
+          <p>Xem, tìm kiếm, xóa sản phẩm</p>
+        </a>
+        <a href="add_product" class="dashboard-item">
+          <h3>Thêm sản phẩm</h3>
+          <p>Thêm một hoặc nhiều sản phẩm mới</p>
+        </a>
+        <a href="edit_many_product" class="dashboard-item">
+          <h3>Chỉnh sửa nhiều</h3>
+          <p>Chỉnh sửa nhiều sản phẩm cùng lúc</p>
+        </a>
+        <a href="categories.html" class="dashboard-item">
+          <h3>Quản lý danh mục</h3>
+          <p>Thêm, sửa, xóa danh mục sản phẩm</p>
+        </a>
       </div>
     </div>
-  </section>
+  </main>
 
   <!-- Footer -->
-  <footer>
+  <footer class="admin-footer">
     <div class="container">
-      <div class="footer-left">
-        <img src="../../images/logo.png" alt="Logo" class="footer-logo"> 
-        <nav>
-          <a href="/products">Sản phẩm</a>
-          <a href="#about-us">Về chúng tôi</a>
-          <a href="#contact">Liên hệ</a>
-        </nav>
-      </div>
-      <p>Copyright © 2024 Mỹ phẩm Việt Nam</p> <!-- Cập nhật năm -->
+      <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
+      <a href="/index" class="back-to-home">Trở về trang chủ</a>
     </div>
   </footer>
 
-  <script src="../../assets/js/user.js"></script>
-
-  <script>
-
-  </script>
+  <script src="../../assets/js/admin.js"></script>
 </body>
 </html>

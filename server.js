@@ -74,7 +74,7 @@ async function generateNextProductId(categoryCode) {
 
 // Routes cho các trang HTML tĩnh
 app.get("/", (req, res) => {
-    const filePath = path.join(__dirname, 'public/page/admin/products_Management.html');
+    const filePath = path.join(__dirname, 'public/page/user/index.html');
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
@@ -82,7 +82,7 @@ app.get("/", (req, res) => {
         res.status(404).send("File not found");
     }
 });
-app.get("/index", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/index.html')); });
+app.get("/products_Management", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/products_Management.html')); });
 app.get("/add_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/add_product.html')); });
 app.get("/edit_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_product.html')); });
 app.get("/edit_many_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_many_product.html')); });
@@ -167,6 +167,7 @@ app.get("/dishes/:id", async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
         }
+        product.loai = getCategoryName(product.loai);
         res.json(product);
     } catch (err) {
         console.error(`Lỗi khi lấy sản phẩm ${id}:`, err);
@@ -239,7 +240,6 @@ app.post('/dishes', async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ khi thêm sản phẩm!' });
     }
 });
-
 
 // Thêm nhiều sản phẩm từ file JSON
 app.post('/dishes/bulk', async (req, res) => {
@@ -406,11 +406,11 @@ app.put('/dishes/:id', async (req, res) => {
         let newFilePath = null;
 
         if (file) {
-            const oldFileName = existingProduct.hinhAnh.split('/').pop();
+            const oldFileName = existingProduct.hinhAnh;
             filePathToDelete = path.join(uploadDir, oldFileName);
             const newFileName = `${id}_${file.name}`;
             newFilePath = path.join(uploadDir, newFileName);
-            newImagePath = `/images/products/${newFileName}`;
+            newImagePath = newFileName;
 
             await new Promise((resolve, reject) => {
                 file.mv(newFilePath, (err) => {
@@ -429,11 +429,13 @@ app.put('/dishes/:id', async (req, res) => {
             moTa: moTa,
             loai: loai,
             thuongHieu: thuongHieu,
+            noiSanXuat: origin,
             hinhAnh: newImagePath,
-            'inventory.origin': origin,
-            'inventory.quantity': parsedQuantity,
-            'inventory.price': parsedPrice,
-            'dacTinh': dacTinh,
+            inventory: {
+                quantity: parsedQuantity,
+                price: parsedPrice
+            },
+            dacTinh: JSON.parse(dacTinh || '{}'),
             updatedAt: new Date()
         };
 
@@ -469,6 +471,99 @@ app.put('/dishes/:id', async (req, res) => {
     }
 });
 
+// Xóa nhiều sản phẩm
+app.delete('/dishes/bulk', async (req, res) => {
+    if (!cosmeticsCollection) {
+        return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
+    }
+
+    try {
+        const { ids } = req.body;
+
+        // 1. Validate input IDs
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ message: "Danh sách ID không hợp lệ hoặc rỗng!" });
+        }
+
+        // Filter out any potentially invalid/empty IDs and ensure they are strings
+        const validIds = ids.map(id => String(id).trim()).filter(id => id.length === 8); // Basic format check
+
+        if (validIds.length === 0) {
+             return res.status(400).json({ message: "Không có ID hợp lệ nào được cung cấp." });
+        }
+
+        console.log("Nhận được yêu cầu xóa các ID:", validIds);
+
+        // 2. Find all products matching the valid IDs to get their image filenames
+        const productsToDelete = await cosmeticsCollection.find(
+            { id: { $in: validIds } },
+            { projection: { _id: 0, id: 1, hinhAnh: 1 } } // Project only needed fields
+        ).toArray();
+
+        const foundIds = productsToDelete.map(p => p.id);
+        const notFoundIds = validIds.filter(id => !foundIds.includes(id));
+
+        if (productsToDelete.length === 0) {
+            console.log("Không tìm thấy sản phẩm nào với các ID đã cho.");
+            return res.status(404).json({ message: "Không tìm thấy sản phẩm nào để xóa với các ID đã cung cấp." });
+        }
+
+        console.log("Sản phẩm tìm thấy để xóa:", foundIds);
+        if (notFoundIds.length > 0) {
+            console.warn("Không tìm thấy các ID sau:", notFoundIds);
+        }
+
+        // 3. Delete the documents from the database
+        const deleteResult = await cosmeticsCollection.deleteMany({ id: { $in: foundIds } }); // Use foundIds to ensure we only delete what we found
+        console.log("Kết quả xóa DB:", deleteResult);
+
+        if (deleteResult.deletedCount === 0) {
+            // Should not happen if productsToDelete had items, but safety check
+             console.error("Lỗi: Đã tìm thấy sản phẩm nhưng không thể xóa khỏi DB.");
+            return res.status(500).json({ message: "Lỗi máy chủ: Không thể xóa sản phẩm khỏi database sau khi tìm thấy." });
+        }
+
+         if (deleteResult.deletedCount < foundIds.length) {
+             console.warn(`Chỉ xóa được ${deleteResult.deletedCount}/${foundIds.length} sản phẩm tìm thấy.`);
+             // This might indicate a race condition or other issue, but we proceed with file deletion for those deleted.
+         }
+
+
+        // 4. Attempt to delete associated image files for successfully found products
+        console.log("Đang xóa các file ảnh liên quan...");
+        productsToDelete.forEach(product => {
+            if (product.hinhAnh) {
+                const imagePath = path.join(uploadDir, product.hinhAnh);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlink(imagePath, (err) => {
+                        if (err) {
+                            console.error(`Lỗi khi xóa file hình ảnh ${product.hinhAnh} cho ID ${product.id}:`, err);
+                            // Log error but continue
+                        } else {
+                            console.log(`Đã xóa file hình ảnh: ${product.hinhAnh} (ID: ${product.id})`);
+                        }
+                    });
+                } else {
+                    console.warn(`File hình ảnh không tồn tại để xóa: ${imagePath} (ID: ${product.id})`);
+                }
+            } else {
+                console.warn(`Sản phẩm ID ${product.id} không có thông tin hinhAnh.`);
+            }
+        });
+
+        // 5. Construct response message
+        let message = `Đã xóa thành công ${deleteResult.deletedCount} sản phẩm.`;
+        if (notFoundIds.length > 0) {
+            message += ` Không tìm thấy các ID: ${notFoundIds.join(', ')}.`;
+        }
+        res.status(200).json({ message: message, deletedCount: deleteResult.deletedCount, notFoundIds: notFoundIds.length > 0 ? notFoundIds : undefined });
+
+    } catch (err) {
+        console.error("Lỗi nghiêm trọng khi xóa nhiều sản phẩm:", err);
+        res.status(500).json({ message: "Lỗi máy chủ khi xóa nhiều sản phẩm: " + err.message });
+    }
+});
+
 // Xóa sản phẩm theo 'id'
 app.delete('/dishes/:id', async (req, res) => {
     if (!cosmeticsCollection) {
@@ -489,7 +584,7 @@ app.delete('/dishes/:id', async (req, res) => {
         }
 
         try {
-            const imageFileName = productToDelete.hinhAnh.split('/').pop();
+            const imageFileName = productToDelete.hinhAnh;
             const imagePath = path.join(uploadDir, imageFileName);
             if (fs.existsSync(imagePath)) {
                 fs.unlink(imagePath, (err) => {

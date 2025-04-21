@@ -7,34 +7,41 @@
   <link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2>ADMIN PANEL</h2>
-    </div>
-    <nav class="sidebar-nav">
-      
-      <a href="/" class="nav-item active">
-        <span class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-        Sản phẩm
-        <span class="nav-arrow">
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-      </a>
-      <div class="sub-menu">
-        <a href="/" class="sub-item">Tất cả sản phẩm</a>
-        <a href="/add_product" class="sub-item">Thêm sản phẩm</a>
-        <a href="categories.html" class="sub-item">Danh mục</a>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>ADMIN PANEL</h2>
       </div>
-
-    </nav>
-  </aside>
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item active">
+          <span class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+          Dashboard
+        </a>
+        <a href="products_Management" class="nav-item">
+          <span class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+          Sản phẩm
+          <span class="nav-arrow">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+        </a>
+        <div class="sub-menu">
+          <a href="products_Management" class="sub-item">Tất cả sản phẩm</a>
+          <a href="add_product" class="sub-item">Thêm sản phẩm</a>
+          <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
+          <a href="categories.html" class="sub-item">Danh mục</a>
+        </div>
+      </nav>
+    </aside>
 
   <!-- Main Content -->
   <main class="main-content">
@@ -113,7 +120,7 @@
           </div>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management.html'">Hủy</button>
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management'">Hủy</button>
           <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
         </div>
       </form>

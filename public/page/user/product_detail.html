@@ -14,7 +14,7 @@
         <img src="../../images/logo.png" alt="Logo" class="header-logo" > <!-- Ví dụ tăng chiều rộng logo -->
       </div>
       <nav>
-        <a href="/index" class="active">Trang chủ</a>
+        <a href="/" class="active">Trang chủ</a>
         <div class="dropdown">
           <a href="/products">Sản phẩm
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,7 +27,6 @@
             <a href="/products?category=son-moi">Son môi</a>
           </div>
         </div>
-        <a href="account.html">Tài khoản</a>
       </nav>
     </div>
   </header>
@@ -135,7 +134,6 @@
                 <button class="quantity-btn increase">+</button>
                 <span class="stock-info">In stock: ${product.inventory.quantity}</span>
               </div>
-              <button class="add-to-cart">Add to Cart</button>
               <button class="wishlist-btn">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M17.366 3.84166C16.941 3.41583 16.4355 3.07783 15.879 2.84799C15.3225 2.6175 14.725 2.5 14.1195 2.5C13.514 2.5 12.9165 2.6175 12.36 2.84799C11.8035 3.07783 11.298 3.41583 10.873 3.84166L10 4.71666L9.127 3.84166C8.2765 2.99033 7.1185 2.5 5.8805 2.5C4.6425 2.5 3.4845 2.99033 2.634 3.84166C1.7835 4.69216 1.293 5.85066 1.293 7.08866C1.293 8.32666 1.7835 9.48516 2.634 10.3357L9.9995 17.7017L17.366 10.3357C17.791 9.91066 18.129 9.40466 18.359 8.84766C18.5895 8.29066 18.707 7.69366 18.707 7.08816C18.707 6.48266 18.5895 5.88566 18.359 5.32866C18.129 4.77166 17.791 4.26666 17.366 3.84166Z" stroke="#666666" stroke-width="2"/>
@@ -217,7 +215,7 @@
 
               relatedProducts.forEach(product => {
                 const productItem = document.createElement('a');
-                productItem.href = `product_detail.html?id=${product.id}`;
+                productItem.href = `product_detail?id=${product.id}`;
                 productItem.classList.add('product-item');
                 const averageRating = product.ratings ? product.ratings.reduce((sum, r) => sum + r.rating, 0) / product.ratings.length : 0;
                 const stars = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
