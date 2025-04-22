@@ -506,17 +506,11 @@ app.put('/dishes/:id', async (req, res) => {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
     }
     const { id } = req.params;
-    const { ten, moTa, loai, thuongHieu, origin, quantity, price, dacTinh } = req.body;
+    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
     const file = req.files ? req.files['product-image'] : null;
 
-    if (!ten || !moTa || !loai || !thuongHieu || !origin || !quantity || !price) {
+    if (!ten || !moTa || !loai || !thuongHieu || !noiSanXuat || !soLuong || !gia) {
         return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin (Tên, Mô tả, Loại, Thương hiệu, Xuất xứ, Số lượng, Giá)!' });
-    }
-
-    const parsedQuantity = parseInt(quantity);
-    const parsedPrice = parseInt(price);
-    if (isNaN(parsedQuantity) || parsedQuantity < 0 || isNaN(parsedPrice) || parsedPrice < 0) {
-        return res.status(400).json({ message: 'Số lượng và giá phải là số không âm!' });
     }
 
     try {
@@ -530,11 +524,12 @@ app.put('/dishes/:id', async (req, res) => {
         let newFilePath = null;
 
         if (file) {
-            const oldFileName = existingProduct.hinhAnh;
+            const oldFileName = existingProduct.hinhAnh.split('/').pop();
             filePathToDelete = path.join(uploadDir, oldFileName);
+
             const newFileName = `${id}_${file.name}`;
             newFilePath = path.join(uploadDir, newFileName);
-            newImagePath = newFileName;
+            newImagePath = `/images/products/${newFileName}`;
 
             await new Promise((resolve, reject) => {
                 file.mv(newFilePath, (err) => {
@@ -549,17 +544,15 @@ app.put('/dishes/:id', async (req, res) => {
         }
 
         const updateFields = {
-            ten: ten,
-            moTa: moTa,
-            loai: loai,
-            thuongHieu: thuongHieu,
-            noiSanXuat: origin,
+            ten,
+            moTa,
+            loai,
+            thuongHieu,
             hinhAnh: newImagePath,
-            inventory: {
-                quantity: parsedQuantity,
-                price: parsedPrice
-            },
-            dacTinh: JSON.parse(dacTinh || '{}'),
+            'inventory.origin': noiSanXuat,
+            'inventory.quantity': parseInt(soLuong),
+            'inventory.price': parseInt(gia),
+            dacTinh: dacTinh ? JSON.parse(dacTinh) : {},
             updatedAt: new Date()
         };
 
@@ -585,7 +578,8 @@ app.put('/dishes/:id', async (req, res) => {
             });
         }
 
-        res.json({ message: 'Cập nhật sản phẩm thành công!', product: result });
+        res.json({ message: 'Cập nhật sản phẩm thành công!', product: result.value });
+
     } catch (err) {
         console.error(`Lỗi khi cập nhật sản phẩm ${id}:`, err);
         if (err.message && err.message.includes('Lỗi khi lưu hình ảnh mới')) {
