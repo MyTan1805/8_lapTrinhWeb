@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = 3001;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
@@ -508,27 +508,11 @@ app.put('/dishes/:id', async (req, res) => {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
     }
     const { id } = req.params;
-
-    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia } = req.body;
+    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
     const file = req.files ? req.files['product-image'] : null;
 
-    // Kiểm tra các trường bắt buộc
     if (!ten || !moTa || !loai || !thuongHieu || !noiSanXuat || !soLuong || !gia) {
-        return res.status(400).json({ 
-            message: 'Vui lòng điền đầy đủ thông tin (Tên, Mô tả, Loại, Thương hiệu, Xuất xứ, Số lượng, Giá)!' 
-        });
-    }
-
-    // Kiểm tra định dạng mã danh mục
-    if (typeof loai !== 'string' || loai.length !== 4) {
-        return res.status(400).json({ message: 'Mã danh mục không hợp lệ (phải là chuỗi 4 ký tự)!' });
-    }
-
-    // Kiểm tra số lượng và giá
-    const quantity = parseInt(soLuong);
-    const price = parseInt(gia);
-    if (isNaN(quantity) || quantity < 0 || isNaN(price) || price < 0) {
-        return res.status(400).json({ message: 'Số lượng và giá phải là số không âm!' });
+        return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin (Tên, Mô tả, Loại, Thương hiệu, Xuất xứ, Số lượng, Giá)!' });
     }
 
     try {
@@ -541,7 +525,6 @@ app.put('/dishes/:id', async (req, res) => {
         let filePathToDelete = null;
         let newFilePath = null;
 
-        // Xử lý upload ảnh mới nếu có
         if (file) {
             const oldFileName = existingProduct.hinhAnh.split('/').pop();
             filePathToDelete = path.join(uploadDir, oldFileName);
@@ -565,14 +548,13 @@ app.put('/dishes/:id', async (req, res) => {
         const updateFields = {
             ten,
             moTa,
-            loai: loai.toUpperCase(),
+            loai,
             thuongHieu,
-            noiSanXuat,
             hinhAnh: newImagePath,
-            inventory: {
-                quantity,
-                price
-            },
+            'inventory.origin': noiSanXuat,
+            'inventory.quantity': parseInt(soLuong),
+            'inventory.price': parseInt(gia),
+            dacTinh: dacTinh ? JSON.parse(dacTinh) : {},
             updatedAt: new Date()
         };
 
@@ -582,23 +564,19 @@ app.put('/dishes/:id', async (req, res) => {
             { returnDocument: 'after' }
         );
 
-        if (!result.value) {
+        if (!result) {
             if (newFilePath && fs.existsSync(newFilePath)) {
                 fs.unlink(newFilePath, (unlinkErr) => {
                     if (unlinkErr) console.error("Lỗi khi xóa file ảnh mới sau khi cập nhật DB thất bại:", unlinkErr);
                 });
             }
-            return res.status(404).json({ message: 'Không tìm thấy sản phẩm để cập nhật!' });
+            return res.status(404).json({ message: 'Không tìm thấy sản phẩm để cập nhật (sau khi lưu file nếu có)!' });
         }
 
-        // Xóa ảnh cũ nếu có
         if (filePathToDelete && fs.existsSync(filePathToDelete)) {
             fs.unlink(filePathToDelete, (err) => {
-                if (err) {
-                    console.error("Lỗi khi xóa file ảnh cũ:", err);
-                } else {
-                    console.log("Đã xóa file ảnh cũ:", filePathToDelete);
-                }
+                if (err) console.error("Lỗi khi xóa file ảnh cũ:", err);
+                else console.log("Đã xóa file ảnh cũ:", filePathToDelete);
             });
         }
 
@@ -606,7 +584,7 @@ app.put('/dishes/:id', async (req, res) => {
 
     } catch (err) {
         console.error(`Lỗi khi cập nhật sản phẩm ${id}:`, err);
-        if (err.message.includes('Lỗi khi lưu hình ảnh mới')) {
+        if (err.message && err.message.includes('Lỗi khi lưu hình ảnh mới')) {
             return res.status(500).json({ message: 'Lỗi khi lưu hình ảnh cập nhật!' });
         }
         res.status(500).json({ message: 'Lỗi máy chủ khi cập nhật sản phẩm!' });

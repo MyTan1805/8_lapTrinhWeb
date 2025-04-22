@@ -5,52 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chỉnh sửa sản phẩm - Admin Panel</title>
   <link rel="stylesheet" href="../../assets/css/admin.css">
-  <style>
-    .attribute-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .attribute-row input {
-      flex: 1;
-    }  
-  </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2>ADMIN PANEL</h2>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="/" class="nav-item active">
-        <span class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-        Dashboard
-      </a>
-      <a href="products_Management" class="nav-item">
-        <span class="nav-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-        Sản phẩm
-        <span class="nav-arrow">
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-      </a>
-      <div class="sub-menu">
-        <a href="products_Management" class="sub-item">Tất cả sản phẩm</a>
-        <a href="add_product" class="sub-item">Thêm sản phẩm</a>
-        <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>ADMIN PANEL</h2>
       </div>
-    </nav>
-  </aside>
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item active">
+          <span class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+          Dashboard
+        </a>
+        <a href="products_Management" class="nav-item">
+          <span class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+          Sản phẩm
+          <span class="nav-arrow">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+            </svg>
+          </span>
+        </a>
+        <div class="sub-menu">
+          <a href="products_Management" class="sub-item">Tất cả sản phẩm</a>
+          <a href="add_product" class="sub-item">Thêm sản phẩm</a>
+          <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
+        </div>
+      </nav>
+    </aside>
 
+  <!-- Main Content -->
   <main class="main-content">
     <div class="container">
       <div class="page-header">
@@ -73,26 +65,26 @@
           <div class="form-group">
             <label for="product-category">Danh mục <span class="required">*</span></label>
             <select id="product-category" name="loai" required>
-              <option value="">Chọn</option>
+              <option value="">Chọn danh mục</option>
               <option value="SERU">Serum</option>
-              <option value="KCNG">Kem Chống Nắng</option>
-              <option value="SRMT">Sữa Rửa Mặt</option>
-              <option value="TONR">Toner</option>
-              <option value="KDUG">Kem Dưỡng</option>
-              <option value="TCHT">Tinh Chất</option>
-              <option value="TTBC">Tẩy Tế Bào Chết</option>
-              <option value="XKOG">Xịt Khoáng</option>
-              <option value="TTRG">Tẩy Trang</option>
-              <option value="KDMT">Kem Dưỡng Mắt</option>
-              <option value="MNNG">Mặt Nạ Ngủ</option>
-              <option value="GDUG">Gel Dưỡng</option>
-              <option value="BDDA">Bộ Dưỡng Da</option>
-              <option value="MANA">Mặt Nạ</option>
-              <option value="STAM">Sữa Tắm</option>
-              <option value="DDUG">Dầu Dưỡng</option>
-              <option value="TDAU">Tinh Dầu</option>
-              <option value="GMUN">Gel Trị Mụn</option>
-              <option value="KLOT">Kem Lót</option>              
+                <option value="KCNG">Kem Chống Nắng</option>
+                <option value="SRMT">Sữa Rửa Mặt</option>
+                <option value="TONR">Toner</option>
+                <option value="KDUG">Kem Dưỡng</option>
+                <option value="TCHT">Tinh Chất</option>
+                <option value="TTBC">Tẩy Tế Bào Chết</option>
+                <option value="XKOG">Xịt Khoáng</option>
+                <option value="TTRG">Tẩy Trang</option>
+                <option value="KDMT">Kem Dưỡng Mắt</option>
+                <option value="MNNG">Mặt Nạ Ngủ</option>
+                <option value="GDUG">Gel Dưỡng</option>
+                <option value="BDDA">Bộ Dưỡng Da</option>
+                <option value="MANA">Mặt Nạ</option>
+                <option value="STAM">Sữa Tắm</option>
+                <option value="DDUG">Dầu Dưỡng</option>
+                <option value="TDAU">Tinh Dầu</option>
+                <option value="GMUN">Gel Trị Mụn</option>
+                <option value="KLOT">Kem Lót</option>
             </select>
           </div>
           <div class="form-group">
@@ -119,12 +111,13 @@
           <div class="form-group">
             <label for="product-image">Hình ảnh <span class="required">*</span></label>
             <input type="file" id="product-image" name="product-image" accept="image/*">
-            <div class="image-preview" id="image-preview">
-              <img id="preview-img" src="" alt="" class="product-image" style="display: none;">
-            </div>
+
+              <div class="image-preview" id="image-preview">
+                <img id="preview-img" src="" alt="" class="product-image" style="display: none;">
+              </div>
+
           </div>
         </div>
-
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management'">Hủy</button>
           <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
@@ -133,6 +126,7 @@
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="admin-footer">
     <div class="container">
       <p>© 2023 Mỹ Phẩm VN - Trang quản trị</p>
@@ -141,18 +135,23 @@
   </footer>
 
   <script>
+    // Lấy ID sản phẩm từ URL
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
-
+  
     if (!productId) {
       alert('Không tìm thấy ID sản phẩm trong URL!');
     } else {
+      // Lấy dữ liệu sản phẩm từ endpoint /dishes/:id
       fetch(`/dishes/${productId}`)
         .then(response => {
-          if (!response.ok) throw new Error('Sản phẩm không tồn tại!');
+          if (!response.ok) {
+            throw new Error('Sản phẩm không tồn tại!');
+          }
           return response.json();
         })
         .then(product => {
+
           document.getElementById('product-id').value = product.id;
           document.getElementById('product-name').value = product.ten;
           document.getElementById('product-description').value = product.moTa;
@@ -161,54 +160,41 @@
           document.getElementById('product-origin').value = product.noiSanXuat;
           document.getElementById('product-stock').value = product.inventory.quantity;
           document.getElementById('product-price').value = product.inventory.price;
-
+  
+          // Hiển thị hình ảnh sản phẩm hiện tại trong phần xem trước
           const previewImg = document.getElementById('preview-img');
           previewImg.src = `../../images/products/${product.hinhAnh}`;
           previewImg.style.display = 'block';
 
-          if (product.thuocTinh && Array.isArray(product.thuocTinh)) {
-            product.thuocTinh.forEach(attr => addAttributeRow(attr));
-          }
+                
         })
         .catch(error => {
           console.error("Lỗi khi tải dữ liệu:", error);
           alert(error.message);
         });
     }
-
-    function addAttributeRow(value = '') {
-      const attributesList = document.getElementById('attributes-list');
-      const row = document.createElement('div');
-      row.className = 'attribute-row';
-      row.innerHTML = `
-        <input type="text" name="thuocTinh[]" value="${value}" placeholder="Ví dụ: Loại da: Da khô">
-        <button type="button" onclick="this.parentElement.remove()" class="btn btn-danger">X</button>
-      `;
-      attributesList.appendChild(row);
-    }
-
+  </script>
+  <script>
     document.querySelector('.edit-product-form').addEventListener('submit', function(e) {
-      e.preventDefault();
+      e.preventDefault(); // Ngăn reload trang
       const formData = new FormData(this);
+    
       fetch(`/dishes/${productId}`, {
         method: 'PUT',
-        body: formData,
-        headers: {
-          // Ensure no Content-Type header is set here; FormData handles it automatically
-        }
+        body: formData
       })
       .then(response => {
         if (!response.ok) throw new Error('Cập nhật thất bại!');
         alert('Cập nhật thành công!');
-        window.location.href = 'products_Management.html';
+        window.location.href = 'products_Management';
       })
       .catch(err => {
         console.error(err);
         alert('Có lỗi xảy ra!');
       });
     });
-  </script>
-
+    </script>
+    
   <script src="../../assets/js/admin.js"></script>
 </body>
-</html>
+</html> 
