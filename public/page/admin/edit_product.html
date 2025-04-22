@@ -13,7 +13,7 @@
     }
     .attribute-row input {
       flex: 1;
-    }
+    }  
   </style>
 </head>
 <body>
@@ -125,20 +125,6 @@
           </div>
         </div>
 
-        <!-- Thêm đặc tính và thuộc tính -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-characteristics">Đặc tính</label>
-            <input type="text" id="product-characteristics" name="dacTinh" placeholder="Ví dụ: Dưỡng ẩm, Làm sáng da">
-            <small>Nhập nhiều đặc tính cách nhau bằng dấu phẩy</small>
-          </div>
-          <div class="form-group">
-            <label>Thuộc tính</label>
-            <div id="attributes-list"></div>
-            <button type="button" class="btn btn-secondary" onclick="addAttributeRow()">+ Thêm thuộc tính</button>
-          </div>
-        </div>
-
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management'">Hủy</button>
           <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
@@ -175,7 +161,6 @@
           document.getElementById('product-origin').value = product.noiSanXuat;
           document.getElementById('product-stock').value = product.inventory.quantity;
           document.getElementById('product-price').value = product.inventory.price;
-          document.getElementById('product-characteristics').value = product.dacTinh || '';
 
           const previewImg = document.getElementById('preview-img');
           previewImg.src = `../../images/products/${product.hinhAnh}`;
@@ -207,7 +192,10 @@
       const formData = new FormData(this);
       fetch(`/dishes/${productId}`, {
         method: 'PUT',
-        body: formData
+        body: formData,
+        headers: {
+          // Ensure no Content-Type header is set here; FormData handles it automatically
+        }
       })
       .then(response => {
         if (!response.ok) throw new Error('Cập nhật thất bại!');

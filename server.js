@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = 3001;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
@@ -507,7 +507,8 @@ app.put('/dishes/:id', async (req, res) => {
         return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
     }
     const { id } = req.params;
-    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia, dacTinh } = req.body;
+
+    const { ten, moTa, loai, thuongHieu, noiSanXuat, soLuong, gia } = req.body;
     const file = req.files ? req.files['product-image'] : null;
 
     // Kiểm tra các trường bắt buộc
@@ -560,27 +561,6 @@ app.put('/dishes/:id', async (req, res) => {
             });
         }
 
-        // Xử lý dacTinh
-        let parsedDacTinh = existingProduct.dacTinh || {}; // Giữ nguyên giá trị cũ nếu không có dữ liệu mới
-        if (dacTinh && dacTinh.trim() !== '') { // Chỉ xử lý nếu dacTinh được gửi và không rỗng
-            try {
-                if (typeof dacTinh === 'string') {
-                    // Kiểm tra nếu chuỗi là JSON hợp lệ
-                    if (dacTinh.startsWith('{') || dacTinh.startsWith('[')) {
-                        parsedDacTinh = JSON.parse(dacTinh); // Parse nếu là chuỗi JSON
-                    } else {
-                        parsedDacTinh = { description: dacTinh }; // Chuyển chuỗi thông thường thành đối tượng
-                    }
-                } else if (typeof dacTinh === 'object' && !Array.isArray(dacTinh)) {
-                    parsedDacTinh = dacTinh; // Giữ nguyên nếu đã là đối tượng
-                } else {
-                    throw new Error('Đặc tính phải là một đối tượng JSON, chuỗi JSON, hoặc chuỗi thông thường!');
-                }
-            } catch (parseErr) {
-                console.error('Lỗi khi parse dacTinh:', parseErr);
-                return res.status(400).json({ message: 'Dữ liệu đặc tính không hợp lệ! Vui lòng nhập JSON hợp lệ hoặc chuỗi thông thường.' });
-            }
-        }
         const updateFields = {
             ten,
             moTa,
@@ -592,7 +572,6 @@ app.put('/dishes/:id', async (req, res) => {
                 quantity,
                 price
             },
-            dacTinh: parsedDacTinh,
             updatedAt: new Date()
         };
 
@@ -631,7 +610,7 @@ app.put('/dishes/:id', async (req, res) => {
         }
         res.status(500).json({ message: 'Lỗi máy chủ khi cập nhật sản phẩm!' });
     }
-});  
+});
 
 // Xóa nhiều sản phẩm
 app.delete('/dishes/bulk', async (req, res) => {
