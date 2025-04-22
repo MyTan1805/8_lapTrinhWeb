@@ -376,6 +376,130 @@ app.post('/dishes/bulk', async (req, res) => {
     }
 });
 
+// Cập nhật nhiều sản phẩm 
+app.put('/dishes/bulk-update', async (req, res) => {
+    console.log('--- Nhận yêu cầu PUT /dishes/bulk-update ---');
+    if (!cosmeticsCollection) {
+        return res.status(503).json({ message: "Dịch vụ chưa sẵn sàng, đang kết nối DB..." });
+    }
+
+    try {
+        const { updates } = req.body;
+
+        if (!updates || !Array.isArray(updates) || updates.length === 0) {
+            console.log("-> Yêu cầu thất bại: Dữ liệu 'updates' không hợp lệ hoặc rỗng.");
+            return res.status(400).json({ message: "Dữ liệu 'updates' không hợp lệ hoặc bị rỗng." });
+        }
+
+        const validationErrors = [];
+        const validUpdates = [];
+
+        for (let i = 0; i < updates.length; i++) {
+            const update = updates[i];
+            const { id, inventory } = update;
+            const currentErrors = [];
+
+            if (!id || typeof id !== 'string' || id.length !== 8) {
+                currentErrors.push(`ID không hợp lệ`);
+            }
+            if (!inventory || typeof inventory !== 'object') {
+                currentErrors.push(`Thiếu thông tin inventory`);
+            } else {
+                const price = inventory.price;
+                const quantity = inventory.quantity;
+                if (price === undefined || price === null || typeof price !== 'number' || price < 0) {
+                    currentErrors.push(`Giá không hợp lệ (${price})`);
+                }
+                if (quantity === undefined || quantity === null || !Number.isInteger(quantity) || quantity < 0) {
+                    currentErrors.push(`Số lượng không hợp lệ (${quantity})`);
+                }
+            }
+
+            if (currentErrors.length > 0) {
+                validationErrors.push({ index: i, id: id || 'N/A', errors: currentErrors.join(', ') });
+            } else {
+                validUpdates.push({ // Chỉ lấy dữ liệu cần thiết
+                    id: id,
+                    price: inventory.price,
+                    quantity: inventory.quantity
+                });
+            }
+        }
+
+        if (validationErrors.length > 0) {
+            console.warn("Lỗi validation dữ liệu bulk update:", validationErrors);
+            return res.status(400).json({
+                message: `Dữ liệu đầu vào không hợp lệ. ${validationErrors.length}/${updates.length} mục có lỗi.`,
+                errors: validationErrors // Gửi chi tiết lỗi về client
+            });
+        }
+
+        if (validUpdates.length === 0) { // Trường hợp này không nên xảy ra nếu validationErrors rỗng, nhưng để chắc chắn
+             console.log("-> Không có dữ liệu cập nhật hợp lệ nào sau validation.");
+             return res.status(400).json({ message: "Không có dữ liệu cập nhật hợp lệ nào được cung cấp." });
+        }
+
+        console.log(`Chuẩn bị cập nhật ${validUpdates.length} sản phẩm.`);
+
+        const bulkOperations = validUpdates.map(update => ({
+            updateOne: {
+                filter: { id: update.id },
+                update: {
+                    $set: {
+                        "inventory.price": update.price,
+                        "inventory.quantity": update.quantity,
+                        "updatedAt": new Date()
+                    }
+                }
+            }
+        }));
+
+        const bulkResult = await cosmeticsCollection.bulkWrite(bulkOperations, { ordered: false });
+        console.log("Kết quả bulkWrite:", {
+            matchedCount: bulkResult.matchedCount,
+            modifiedCount: bulkResult.modifiedCount,
+            upsertedCount: bulkResult.upsertedCount,
+            writeErrors: bulkResult.writeErrors?.length || 0 // Chỉ đếm số lỗi ghi
+        });
+         if (bulkResult.writeErrors?.length > 0) {
+            console.error("Lỗi MongoDB bulkWrite chi tiết:", bulkResult.getWriteErrors());
+        }
+
+
+        const matchedCount = bulkResult.matchedCount || 0;
+        const modifiedCount = bulkResult.modifiedCount || 0;
+
+        let message = `Đã xử lý ${validUpdates.length} yêu cầu. `;
+        let statusCode = 200;
+
+        if (modifiedCount > 0) {
+             message += `Cập nhật thành công ${modifiedCount} sản phẩm. `;
+        }
+        const notFoundCount = validUpdates.length - matchedCount;
+        if (notFoundCount > 0) {
+             message += `${notFoundCount} ID không được tìm thấy. `;
+             if (modifiedCount === 0) { // Nếu không sửa được gì và có ID không tìm thấy
+                 statusCode = notFoundCount === validUpdates.length ? 404 : 207; // 404 nếu tất cả đều không tìm thấy, 207 nếu một phần
+                 if (statusCode === 404) message = `Không tìm thấy bất kỳ sản phẩm nào với các ID đã cung cấp.`;
+             } else {
+                 statusCode = 207; // Multi-Status nếu có cả thành công và không tìm thấy
+             }
+        }
+
+        if (bulkResult.writeErrors?.length > 0) {
+             // Nếu có lỗi ghi DB khác (ngoài lỗi không tìm thấy đã xử lý)
+             statusCode = 500; // Lỗi server
+             message = `Đã xảy ra lỗi trong quá trình cập nhật database (${bulkResult.writeErrors.length} lỗi). Vui lòng thử lại sau.`;
+         }
+
+        console.log(`-> Phản hồi: Status ${statusCode}, Message: ${message}`);
+        res.status(statusCode).json({ message, matchedCount, modifiedCount });
+
+    } catch (err) {
+        console.error("!!! Lỗi nghiêm trọng khi xử lý PUT /dishes/bulk-update:", err);
+        res.status(500).json({ message: "Lỗi máy chủ khi cập nhật hàng loạt: " + err.message });
+    }
+});
 // Cập nhật sản phẩm theo 'id'
 app.put('/dishes/:id', async (req, res) => {
     if (!cosmeticsCollection) {
@@ -607,6 +731,7 @@ app.delete('/dishes/:id', async (req, res) => {
         res.status(500).json({ message: "Lỗi máy chủ khi xóa sản phẩm!" });
     }
 });
+
 
 // Khởi động server
 connectDB()

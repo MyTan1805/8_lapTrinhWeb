@@ -47,36 +47,24 @@
         font-size: 1.5em;
         color: #333;
     }
-    /* Basic Toast Styles */
-    #toast {
-        position: fixed;
-        bottom: 20px; /* Positioned at the bottom */
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 12px 20px;
-        border-radius: 25px; /* More rounded */
-        color: #FFFFFF;
-        z-index: 1002; /* Above loading */
-        font-size: 0.9em;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        display: none; /* Use opacity and display for transitions */
-        min-width: 250px;
-        text-align: center;
+    /* Advanced Search Styles (Copied from edit_many_product.html) */
+    .search-form {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    #toast.show {
-        display: block;
-        opacity: 1;
+    .search-form label {
+      margin-right: 5px;
     }
-    #toast.success {
-        background-color: #4CAF50; /* Green */
+    .search-form input,
+    .search-form select {
+      padding: 8px;
+      width: 150px;
     }
-    #toast.error {
-        background-color: #f44336; /* Red */
-    }
-    #toast.warning {
-        background-color: #ff9800; /* Orange */
+    .search-form .range-input {
+      width: 80px;
     }
   </style>
 </head>
@@ -87,27 +75,32 @@
       <h2>ADMIN PANEL</h2>
     </div>
     <nav class="sidebar-nav">
-      <!-- ... (rest of your sidebar) ... -->
-       <a href="products_Management" class="nav-item active">
-         <span class="nav-icon">
-           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
-           </svg>
-         </span>
-         Sản phẩm
-         <span class="nav-arrow">
-           <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
-           </svg>
-         </span>
-       </a>
-       <div class="sub-menu" style="display: block;"> <!-- Ensure submenu is visible -->
-         <a href="products_Management" class="sub-item active">Tất cả sản phẩm</a>
-         <a href="add_product" class="sub-item">Thêm sản phẩm</a>
-         <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
-         <!-- <a href="categories.html" class="sub-item">Danh mục</a> -->
-       </div>
-      <!-- ... -->
+      <a href="/" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a href="products_Management" class="nav-item">
+        <span class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 5H17V15H3V5Z" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+        Sản phẩm
+        <span class="nav-arrow">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="2"/>
+          </svg>
+        </span>
+      </a>
+      <div class="sub-menu">
+        <a href="products_Management" class="sub-item">Tất cả sản phẩm</a>
+        <a href="add_product" class="sub-item">Thêm sản phẩm</a>
+        <a href="edit_many_product" class="sub-item">Chỉnh sửa nhiều</a>
+      </div>
     </nav>
   </aside>
 
@@ -117,19 +110,48 @@
         <h1>Quản lý sản phẩm</h1>
         <div class="header-actions">
           <a href="/" class="btn btn-secondary">Trở về trang chủ</a>
-          <button class="delete-many-btn" id="deleteManyBtn">Xóa Sản Phẩm Đã Chọn</button> <!-- Changed text slightly -->
+          <button class="delete-many-btn" id="deleteManyBtn">Xóa Sản Phẩm Đã Chọn</button>
           <a href="add_product" class="btn btn-primary">+ Thêm sản phẩm</a>
         </div>
       </div>
-      <div class="search-bar">
-        <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm sản phẩm (Tên, Danh mục, ID)...">
-        <span class="search-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 16C12.866 16 16 12.866 16 9C16 5.13401 12.866 2 9 2C5.13401 2 2 5.13401 2 9C2 12.866 5.13401 16 9 16Z" stroke="#666666" stroke-width="2"/>
-            <path d="M14 14L18 18" stroke="#666666" stroke-width="2"/>
-          </svg>
-        </span>
-      </div>
+      <!-- Advanced Search Form -->
+      <form id="search-form" class="search-form" method="get">
+        <div>
+          <label for="ten">Tên sản phẩm:</label>
+          <input type="text" id="ten" name="ten">
+        </div>
+        <div>
+          <label for="loai">Danh mục:</label>
+          <select id="loai" name="loai">
+            <option value="">Tất cả</option>
+            <option value="Serum">Serum</option>
+            <option value="Kem Chống Nắng">Kem Chống Nắng</option>
+            <option value="Sữa Rửa Mặt">Sữa Rửa Mặt</option>
+            <option value="Toner">Toner</option>
+            <option value="Kem Dưỡng">Kem Dưỡng</option>
+            <option value="Tinh Chất">Tinh Chất</option>
+            <option value="Tẩy Tế Bào Chết">Tẩy Tế Bào Chết</option>
+            <option value="Xịt Khoáng">Xịt Khoáng</option>
+            <option value="Tẩy Trang">Tẩy Trang</option>
+            <option value="Kem Dưỡng Mắt">Kem Dưỡng Mắt</option>
+            <option value="Mặt Nạ Ngủ">Mặt Nạ Ngủ</option>
+            <option value="Gel Dưỡng">Gel Dưỡng</option>
+            <option value="Bộ Dưỡng Da">Bộ Dưỡng Da</option>
+            <option value="Mặt Nạ">Mặt Nạ</option>
+            <option value="Sữa Tắm">Sữa Tắm</option>
+            <option value="Dầu Dưỡng">Dầu Dưỡng</option>
+            <option value="Tinh Dầu">Tinh Dầu</option>
+            <option value="Gel Trị Mụn">Gel Trị Mụn</option>
+            <option value="Kem Lót">Kem Lót</option>
+          </select>
+        </div>
+        <div>
+          <label for="giaFr">Khoảng giá:</label>
+          <input type="number" id="giaFr" name="giaFr" class="range-input" placeholder="Từ">
+          <input type="number" id="giaTo" name="giaTo" class="range-input" placeholder="Đến">
+        </div>
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+      </form>
       <div class="table-wrapper">
         <table class="product-table">
           <thead>
@@ -138,7 +160,7 @@
               <th class="sortable" data-sort="id">ID</th>
               <th>Hình</th>
               <th class="sortable" data-sort="ten">Tên sản phẩm</th>
-              <th class="sortable" data-sort="loaiHienThi">Danh mục</th> <!-- Sort by display name -->
+              <th class="sortable" data-sort="loaiHienThi">Danh mục</th>
               <th class="sortable" data-sort="price">Giá</th>
               <th class="sortable" data-sort="quantity">Còn hàng</th>
               <th>Trạng thái</th>
@@ -146,7 +168,6 @@
             </tr>
           </thead>
           <tbody id="productTableBody">
-            <!-- Rows will be populated dynamically -->
             <tr><td colspan="9" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
           </tbody>
         </table>
@@ -163,34 +184,28 @@
   <footer class="admin-footer">
     <div class="container">
       <p>© 2024 Mỹ Phẩm VN - Trang quản trị</p>
-      <!-- Removed redundant home link -->
     </div>
   </footer>
 
   <!-- Loading Indicator Element -->
   <div id="loading">Đang xử lý...</div>
 
-  <!-- Toast Notification Element -->
-  <div id="toast"></div>
-
   <script>
     let products = [];
     let filteredProducts = [];
-    let sortState = { column: null, direction: 'asc' }; // Keep track of sort state
+    let sortState = { column: null, direction: 'asc' };
     const productsPerPage = 7;
     let currentPage = 1;
 
     // DOM Elements
     const productTableBody = document.getElementById('productTableBody');
-    const searchInput = document.getElementById('searchInput');
+    const searchForm = document.getElementById('search-form');
     const selectAllCheckbox = document.getElementById('selectAll');
     const deleteManyBtn = document.getElementById('deleteManyBtn');
     const prevPageBtn = document.getElementById('prevPage');
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfoSpan = document.getElementById('pageInfo');
     const loadingIndicator = document.getElementById('loading');
-    const toastElement = document.getElementById("toast");
-
 
     // Fetch products from the server
     async function fetchProducts() {
@@ -201,41 +216,39 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            // Pre-process data for easier sorting/filtering
             products = data.map(p => ({
                 ...p,
-                price: p.inventory?.price || 0, // Add top-level price for sorting
-                quantity: p.inventory?.quantity || 0 // Add top-level quantity for sorting
+                price: p.inventory?.price || 0,
+                quantity: p.inventory?.quantity || 0
             }));
             filteredProducts = [...products];
-            currentPage = 1; // Reset to first page
-            renderTable(); // Initial render
+            currentPage = 1;
+            renderTable();
         } catch (error) {
             console.error("Lỗi khi tải dữ liệu sản phẩm:", error);
             productTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px; color: red;">Không thể tải dữ liệu sản phẩm. Lỗi: ${error.message}</td></tr>`;
-            showToast(`Lỗi tải dữ liệu: ${error.message}`, "error");
+            alert(`Lỗi tải dữ liệu: ${error.message}`);
         }
     }
 
     // Render the product table content
     function renderTable() {
-        sortProducts(); // Apply sorting before rendering
-        productTableBody.innerHTML = ''; // Clear existing rows
+        sortProducts();
+        productTableBody.innerHTML = '';
 
         const startIndex = (currentPage - 1) * productsPerPage;
         const endIndex = startIndex + productsPerPage;
         const productsToRender = filteredProducts.slice(startIndex, endIndex);
 
         if (productsToRender.length === 0) {
-             productTableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">Không tìm thấy sản phẩm nào.</td></tr>';
+            productTableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">Không tìm thấy sản phẩm nào.</td></tr>';
         } else {
             productsToRender.forEach(product => {
                 const row = document.createElement('tr');
                 const status = product.quantity > 0 ? 'Hoạt động' : 'Hết hàng';
                 const statusClass = product.quantity > 0 ? 'active' : 'inactive';
-                // Use optional chaining for safety, though we added defaults in fetch
                 const priceDisplay = (product.price || 0).toLocaleString('vi-VN');
-                const imageSrc = product.hinhAnh ? `/images/products/${encodeURIComponent(product.hinhAnh)}` : '/images/placeholder.png'; // Fallback image
+                const imageSrc = product.hinhAnh ? `/images/products/${encodeURIComponent(product.hinhAnh)}` : '/images/placeholder.png';
 
                 row.innerHTML = `
                     <td><input type="checkbox" class="product-checkbox" data-id="${product.id}"></td>
@@ -248,7 +261,7 @@
                     <td><span class="status ${statusClass}">${status}</span></td>
                     <td>
                         <div class="action-wrapper">
-                             <button class="action-btn" title="Thao tác">...</button> <!-- Simple dots -->
+                            <button class="action-btn" title="Thao tác">...</button>
                             <div class="action-dropdown">
                                 <a href="/product_detail?id=${product.id}" target="_blank" class="action-item">Xem chi tiết</a>
                                 <a href="/edit_product?id=${product.id}" class="action-item">Sửa</a>
@@ -261,15 +274,64 @@
             });
         }
         updatePaginationControls();
-        updateSelectAllCheckboxState(); // Update select all based on current page checks
-        toggleDeleteManyButton(); // Update delete many button visibility
+        updateSelectAllCheckboxState();
+        toggleDeleteManyButton();
     }
 
     // --- Event Listeners ---
 
-    // Search Input
-    searchInput.addEventListener('input', () => {
-        filterProducts();
+    // Search Form
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(searchForm);
+        const ten = formData.get('ten');
+        const loai = formData.get('loai');
+        const giaFr = formData.get('giaFr') ? parseInt(formData.get('giaFr')) : null;
+        const giaTo = formData.get('giaTo') ? parseInt(formData.get('giaTo')) : null;
+
+        // Lọc sản phẩm (kiểu OR)
+        filteredProducts = products.filter(product => {
+            let match = false;
+
+            // Lọc theo tên (regex, không phân biệt hoa thường)
+            if (ten) {
+                const regex = new RegExp(ten, 'i');
+                if (regex.test(product.ten)) {
+                    match = true;
+                }
+            }
+
+            // Lọc theo danh mục
+            if (loai) {
+                if (product.loai === loai) {
+                    match = true;
+                }
+            }
+
+            // Lọc theo giá
+            if (giaFr && giaTo) {
+                if (product.inventory.price >= giaFr && product.inventory.price <= giaTo) {
+                    match = true;
+                }
+            } else if (giaFr) {
+                if (product.inventory.price >= giaFr) {
+                    match = true;
+                }
+            } else if (giaTo) {
+                if (product.inventory.price <= giaTo) {
+                    match = true;
+                }
+            }
+
+            // Nếu không có điều kiện nào được nhập, hiển thị tất cả
+            if (!ten && !loai && !giaFr && !giaTo) {
+                match = true;
+            }
+
+            return match;
+        });
+
+        currentPage = 1;
         renderTable();
     });
 
@@ -291,16 +353,16 @@
     });
 
     // Delete Button (using event delegation)
-     productTableBody.addEventListener('click', function(e) {
-         if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
-             e.preventDefault();
-             const button = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
-             const productId = button.getAttribute('data-id');
-             if (productId) {
+    productTableBody.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+            e.preventDefault();
+            const button = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
+            const productId = button.getAttribute('data-id');
+            if (productId) {
                 showSingleDeleteModal(productId);
-             }
-         }
-     });
+            }
+        }
+    });
 
     // Delete Many Button
     deleteManyBtn.addEventListener('click', function() {
@@ -308,7 +370,7 @@
         const productIds = Array.from(checkedCheckboxes).map(checkbox => checkbox.getAttribute("data-id"));
 
         if (productIds.length === 0) {
-            showToast("Vui lòng chọn ít nhất một sản phẩm để xóa!", "warning");
+            alert("Vui lòng chọn ít nhất một sản phẩm để xóa!");
             return;
         }
         showMultiDeleteModal(productIds);
@@ -332,44 +394,27 @@
 
     // Sorting Headers (using event delegation)
     document.querySelector('.product-table thead').addEventListener('click', (e) => {
-         if (e.target.classList.contains('sortable')) {
-             const column = e.target.getAttribute('data-sort');
-             if (sortState.column === column) {
-                 sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
-             } else {
-                 sortState.column = column;
-                 sortState.direction = 'asc';
-             }
-             // Remove sorting indicators from other columns
-             document.querySelectorAll('.product-table th.sortable').forEach(th => {
-                 th.classList.remove('sort-asc', 'sort-desc');
-             });
-             // Add indicator to current column
-             e.target.classList.add(sortState.direction === 'asc' ? 'sort-asc' : 'sort-desc');
-             renderTable(); // Re-render with new sort order
-         }
-     });
+        if (e.target.classList.contains('sortable')) {
+            const column = e.target.getAttribute('data-sort');
+            if (sortState.column === column) {
+                sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortState.column = column;
+                sortState.direction = 'asc';
+            }
+            document.querySelectorAll('.product-table th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            e.target.classList.add(sortState.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+            renderTable();
+        }
+    });
 
     // --- Helper Functions ---
 
-    // Filter products based on search term
-    function filterProducts() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        if (!searchTerm) {
-            filteredProducts = [...products];
-        } else {
-            filteredProducts = products.filter(product =>
-                product.ten.toLowerCase().includes(searchTerm) ||
-                (product.loaiHienThi && product.loaiHienThi.toLowerCase().includes(searchTerm)) ||
-                product.id.toLowerCase().includes(searchTerm) // Search by ID as well
-            );
-        }
-        currentPage = 1; // Reset to page 1 after filtering
-    }
-
     // Sort products based on current sort state
     function sortProducts() {
-        if (!sortState.column) return; // No sorting applied
+        if (!sortState.column) return;
 
         const { column, direction } = sortState;
         const multiplier = direction === 'asc' ? 1 : -1;
@@ -378,22 +423,19 @@
             let valA = a[column];
             let valB = b[column];
 
-             // Handle different data types for sorting
-             if (column === 'price' || column === 'quantity') {
-                 valA = Number(valA) || 0;
-                 valB = Number(valB) || 0;
-                 return (valA - valB) * multiplier;
-             } else {
-                 // Default to string comparison
-                 valA = String(valA || '').toLowerCase();
-                 valB = String(valB || '').toLowerCase();
-                 if (valA < valB) return -1 * multiplier;
-                 if (valA > valB) return 1 * multiplier;
-                 return 0;
-             }
+            if (column === 'price' || column === 'quantity') {
+                valA = Number(valA) || 0;
+                valB = Number(valB) || 0;
+                return (valA - valB) * multiplier;
+            } else {
+                valA = String(valA || '').toLowerCase();
+                valB = String(valB || '').toLowerCase();
+                if (valA < valB) return -1 * multiplier;
+                if (valA > valB) return 1 * multiplier;
+                return 0;
+            }
         });
     }
-
 
     // Update state of "Select All" checkbox based on current page's checkboxes
     function updateSelectAllCheckboxState() {
@@ -425,7 +467,7 @@
             deleteManyBtn.textContent = `Xóa ${checkedCount} sản phẩm đã chọn`;
         } else {
             deleteManyBtn.classList.remove("visible");
-             deleteManyBtn.textContent = `Xóa sản phẩm đã chọn`; // Reset text
+            deleteManyBtn.textContent = `Xóa sản phẩm đã chọn`;
         }
     }
 
@@ -438,8 +480,7 @@
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
 
-         // Disable selectAll if no products on the current page
-         selectAllCheckbox.disabled = productTableBody.querySelectorAll('.product-checkbox').length === 0;
+        selectAllCheckbox.disabled = productTableBody.querySelectorAll('.product-checkbox').length === 0;
     }
 
     // --- Modal and Deletion Logic ---
@@ -456,43 +497,39 @@
 
     // Show confirmation modal for multiple product deletion
     function showMultiDeleteModal(productIds) {
-         showModal(`Xác nhận xóa nhiều sản phẩm`,
-                   `<p style="color: #666666; margin-bottom: 20px;">Bạn có chắc chắn muốn xóa <strong>${productIds.length}</strong> sản phẩm đã chọn?</p>`,
-                   // Pass the array as a JSON string to avoid issues with commas in product IDs if they ever occur
-                   `<button class="btn btn-danger" onclick='confirmMultiDelete(${JSON.stringify(productIds)})'>Xóa ${productIds.length} sản phẩm</button>
-                    <button class="btn btn-secondary" onclick="closeModal()">Hủy</button>`);
+        showModal(`Xác nhận xóa nhiều sản phẩm`,
+                  `<p style="color: #666666; margin-bottom: 20px;">Bạn có chắc chắn muốn xóa <strong>${productIds.length}</strong> sản phẩm đã chọn?</p>`,
+                  `<button class="btn btn-danger" onclick='confirmMultiDelete(${JSON.stringify(productIds)})'>Xóa ${productIds.length} sản phẩm</button>
+                   <button class="btn btn-secondary" onclick="closeModal()">Hủy</button>`);
     }
 
-     // Generic Modal Function
-     function showModal(title, contentHtml, footerHtml) {
-         closeModal(); // Close any existing modal first
-         const modal = document.createElement("div");
-         modal.className = "modal";
-         modal.id = "confirmActionModal";
-         // Improved modal styling
-         modal.style.cssText = `
-             display: flex; justify-content: center; align-items: center;
-             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-             background: rgba(0, 0, 0, 0.6); z-index: 1000;
-             opacity: 0; transition: opacity 0.3s ease;
-         `;
-         modal.innerHTML = `
-             <div style="background: #FFFFFF; width: 90%; max-width: 450px; padding: 25px 30px; border-radius: 8px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s ease;">
-                 <h3 style="color: #333333; margin-top: 0; margin-bottom: 15px; font-size: 1.3em;">${title}</h3>
-                 ${contentHtml}
-                 <div class="modal-actions" style="margin-top: 25px;">
-                     ${footerHtml}
-                 </div>
-             </div>
-         `;
-         document.body.appendChild(modal);
-         // Trigger transition
-         setTimeout(() => {
-             modal.style.opacity = '1';
-             modal.querySelector('div').style.transform = 'scale(1)';
-         }, 10); // Small delay ensures transition works
-     }
-
+    // Generic Modal Function
+    function showModal(title, contentHtml, footerHtml) {
+        closeModal();
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.id = "confirmActionModal";
+        modal.style.cssText = `
+            display: flex; justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); z-index: 1000;
+            opacity: 0; transition: opacity 0.3s ease;
+        `;
+        modal.innerHTML = `
+            <div style="background: #FFFFFF; width: 90%; max-width: 450px; padding: 25px 30px; border-radius: 8px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s ease;">
+                <h3 style="color: #333333; margin-top: 0; margin-bottom: 15px; font-size: 1.3em;">${title}</h3>
+                ${contentHtml}
+                <div class="modal-actions" style="margin-top: 25px;">
+                    ${footerHtml}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.querySelector('div').style.transform = 'scale(1)';
+        }, 10);
+    }
 
     // Close any modal
     function closeModal() {
@@ -500,7 +537,7 @@
         if (modal) {
             modal.style.opacity = '0';
             modal.querySelector('div').style.transform = 'scale(0.9)';
-            setTimeout(() => modal.remove(), 300); 
+            setTimeout(() => modal.remove(), 300);
         }
     }
 
@@ -510,18 +547,58 @@
         closeModal();
         try {
             const response = await fetch(`/dishes/${productId}`, { method: 'DELETE' });
-            const data = await response.json(); 
+            const data = await response.json();
 
             if (response.ok) {
-                showToast(data.message || `Xóa sản phẩm ${productId} thành công!`, "success");
-
+                alert(data.message || `Xóa sản phẩm ${productId} thành công!`);
                 products = products.filter(p => p.id !== productId);
-                filterProducts(); 
+                const formData = new FormData(searchForm);
+                const ten = formData.get('ten');
+                const loai = formData.get('loai');
+                const giaFr = formData.get('giaFr') ? parseInt(formData.get('giaFr')) : null;
+                const giaTo = formData.get('giaTo') ? parseInt(formData.get('giaTo')) : null;
+
+                filteredProducts = products.filter(product => {
+                    let match = false;
+
+                    if (ten) {
+                        const regex = new RegExp(ten, 'i');
+                        if (regex.test(product.ten)) {
+                            match = true;
+                        }
+                    }
+
+                    if (loai) {
+                        if (product.loai === loai) {
+                            match = true;
+                        }
+                    }
+
+                    if (giaFr && giaTo) {
+                        if (product.inventory.price >= giaFr && product.inventory.price <= giaTo) {
+                            match = true;
+                        }
+                    } else if (giaFr) {
+                        if (product.inventory.price >= giaFr) {
+                            match = true;
+                        }
+                    } else if (giaTo) {
+                        if (product.inventory.price <= giaTo) {
+                            match = true;
+                        }
+                    }
+
+                    if (!ten && !loai && !giaFr && !giaTo) {
+                        match = true;
+                    }
+
+                    return match;
+                });
                 const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
                 if (currentPage > totalPages && totalPages > 0) {
                     currentPage = totalPages;
                 } else if (filteredProducts.length === 0) {
-                    currentPage = totalPages; 
+                    currentPage = totalPages;
                 }
                 renderTable();
             } else {
@@ -529,69 +606,55 @@
             }
         } catch (error) {
             console.error(`Lỗi khi xóa sản phẩm ${productId}:`, error);
-            showToast(`Lỗi khi xóa: ${error.message}`, "error");
+            alert(`Lỗi khi xóa: ${error.message}`);
         } finally {
             loadingIndicator.style.display = 'none';
         }
     }
 
-
     // Confirm multiple delete action
     async function confirmMultiDelete(productIds) {
         if (!Array.isArray(productIds) || productIds.length === 0) {
-             showToast("Không có ID sản phẩm nào để xóa.", "warning");
-             return;
+            alert("Không có ID sản phẩm nào để xóa.");
+            return;
         }
         console.log("Xác nhận xóa các ID:", productIds);
         loadingIndicator.style.display = "block";
-    closeModal();
+        closeModal();
 
-    try {
-        const response = await fetch("/dishes/bulk", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ids: productIds }),
-        });
+        try {
+            const response = await fetch("/dishes/bulk", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ids: productIds }),
+            });
 
-        if (!response.ok) {
-            let errorMsg = `Lỗi ${response.status}: ${response.statusText}`;
-            try {
-                const errorData = await response.json();
-                errorMsg = errorData.message || errorMsg;
-            } catch (parseError) {
-                console.warn("Không thể parse JSON lỗi từ server:", parseError);
+            if (!response.ok) {
+                let errorMsg = `Lỗi ${response.status}: ${response.statusText}`;
+                try {
+                    const errorData = await response.json();
+                    errorMsg = errorData.message || errorMsg;
+                } catch (parseError) {
+                    console.warn("Không thể parse JSON lỗi từ server:", parseError);
+                }
+                throw new Error(errorMsg);
             }
-            throw new Error(errorMsg);
+
+            const data = await response.json();
+            alert(data.message || `Thực hiện xóa ${productIds.length} sản phẩm.`);
+            await fetchProducts();
+
+        } catch (error) {
+            console.error("Lỗi khi xóa nhiều sản phẩm:", error);
+            alert(`Lỗi khi xóa nhiều: ${error.message}`);
+        } finally {
+            loadingIndicator.style.display = "none";
+            selectAllCheckbox.checked = false;
+            toggleDeleteManyButton();
         }
-
-        const data = await response.json();
-        showToast(data.message || `Thực hiện xóa ${productIds.length} sản phẩm.`, "success");
-        await fetchProducts();
-
-    } catch (error) { 
-        console.error("Lỗi khi xóa nhiều sản phẩm:", error);
-        showToast(`Lỗi khi xóa nhiều: ${error.message}`, "error");
-    } finally {
-        loadingIndicator.style.display = "none";
-        selectAllCheckbox.checked = false;
-        toggleDeleteManyButton();
-    }
     }
 
-
-    function showToast(message, type = "info") { 
-        toastElement.textContent = message;
-        toastElement.className = `toast ${type} show`; 
-
-        setTimeout(() => {
-            toastElement.classList.remove("show");
-        }, 3000);
-    }
-
-    // --- Initial Load ---
     document.addEventListener('DOMContentLoaded', fetchProducts);
-
   </script>
-  <!-- <script src="../../assets/js/admin.js"></script> --> <!-- Assuming admin.js is not strictly needed for this page logic -->
 </body>
 </html>
