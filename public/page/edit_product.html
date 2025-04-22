@@ -13,7 +13,7 @@
     }
     .attribute-row input {
       flex: 1;
-    }
+    }  
   </style>
 </head>
 <body>
@@ -125,20 +125,6 @@
           </div>
         </div>
 
-        <!-- Thêm đặc tính và thuộc tính -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="product-characteristics">Đặc tính</label>
-            <input type="text" id="product-characteristics" name="dacTinh" placeholder="Ví dụ: Dưỡng ẩm, Làm sáng da">
-            <small>Nhập nhiều đặc tính cách nhau bằng dấu phẩy</small>
-          </div>
-          <div class="form-group">
-            <label>Thuộc tính</label>
-            <div id="attributes-list"></div>
-            <button type="button" class="btn btn-secondary" onclick="addAttributeRow()">+ Thêm thuộc tính</button>
-          </div>
-        </div>
-
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" onclick="window.location.href='products_Management'">Hủy</button>
           <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
@@ -154,6 +140,75 @@
     </div>
   </footer>
 
-  <script src="../../assets/js/edit.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if (!productId) {
+      alert('Không tìm thấy ID sản phẩm trong URL!');
+    } else {
+      fetch(`/dishes/${productId}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Sản phẩm không tồn tại!');
+          return response.json();
+        })
+        .then(product => {
+          document.getElementById('product-id').value = product.id;
+          document.getElementById('product-name').value = product.ten;
+          document.getElementById('product-description').value = product.moTa;
+          document.getElementById('product-category').value = product.loai;
+          document.getElementById('product-brand').value = product.thuongHieu;
+          document.getElementById('product-origin').value = product.noiSanXuat;
+          document.getElementById('product-stock').value = product.inventory.quantity;
+          document.getElementById('product-price').value = product.inventory.price;
+
+          const previewImg = document.getElementById('preview-img');
+          previewImg.src = `../../images/products/${product.hinhAnh}`;
+          previewImg.style.display = 'block';
+
+          if (product.thuocTinh && Array.isArray(product.thuocTinh)) {
+            product.thuocTinh.forEach(attr => addAttributeRow(attr));
+          }
+        })
+        .catch(error => {
+          console.error("Lỗi khi tải dữ liệu:", error);
+          alert(error.message);
+        });
+    }
+
+    function addAttributeRow(value = '') {
+      const attributesList = document.getElementById('attributes-list');
+      const row = document.createElement('div');
+      row.className = 'attribute-row';
+      row.innerHTML = `
+        <input type="text" name="thuocTinh[]" value="${value}" placeholder="Ví dụ: Loại da: Da khô">
+        <button type="button" onclick="this.parentElement.remove()" class="btn btn-danger">X</button>
+      `;
+      attributesList.appendChild(row);
+    }
+
+    document.querySelector('.edit-product-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch(`/dishes/${productId}`, {
+        method: 'PUT',
+        body: formData,
+        headers: {
+          // Ensure no Content-Type header is set here; FormData handles it automatically
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Cập nhật thất bại!');
+        alert('Cập nhật thành công!');
+        window.location.href = 'products_Management.html';
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Có lỗi xảy ra!');
+      });
+    });
+  </script>
+
+  <script src="../../assets/js/admin.js"></script>
 </body>
 </html>
