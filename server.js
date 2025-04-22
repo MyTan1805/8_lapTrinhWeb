@@ -5,6 +5,7 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
+
 const { MongoClient, ObjectId } = require('mongodb');
 
 const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
@@ -74,7 +75,7 @@ async function generateNextProductId(categoryCode) {
 
 // Routes cho các trang HTML tĩnh
 app.get("/", (req, res) => {
-    const filePath = path.join(__dirname, 'public/page/user/index.html');
+    const filePath = path.join(__dirname, 'public/page/index.html');
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
@@ -82,12 +83,12 @@ app.get("/", (req, res) => {
         res.status(404).send("File not found");
     }
 });
-app.get("/products_Management", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/products_Management.html')); });
-app.get("/add_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/add_product.html')); });
-app.get("/edit_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_product.html')); });
-app.get("/edit_many_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/admin/edit_many_product.html')); });
-app.get("/product_detail", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/product_detail.html')); });
-app.get("/products", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/user/products.html')); });
+app.get("/products_Management", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/products_Management.html')); });
+app.get("/add_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/add_product.html')); });
+app.get("/edit_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/edit_product.html')); });
+app.get("/edit_many_product", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/edit_many_product.html')); });
+app.get("/product_detail", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/product_detail.html')); });
+app.get("/products", (req, res) => { res.sendFile(path.join(__dirname, 'public/page/products.html')); });
 
 // --- API Routes ---
 

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sản phẩm - Mỹ phẩm Việt Nam</title>
+  <link rel="stylesheet" href="../../assets/css/user.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <!-- Tăng kích thước logo trong header nếu cần -->
+        <img src="../../images/logo.png" alt="Logo" class="header-logo" > <!-- Ví dụ tăng chiều rộng logo -->
+      </div>
+      <nav>
+        <a href="/" class="active">Trang chủ</a>
+        <div class="dropdown">
+          <a href="/products">Sản phẩm
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="2"/>
+            </svg>
+          </a>
+          <div class="dropdown-content">
+            <a href="/products?category=kem-chong-nang">Kem chống nắng</a>
+            <a href="/products?category=sua-rua-mat">Sữa rửa mặt</a>
+            <a href="/products?category=son-moi">Son môi</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Phần 1: Thông tin sản phẩm -->
+    <section class="product-detail">
+      <div class="container">
+        <div class="product-detail-wrapper" id="productDetailWrapper">
+          <!-- Product details will be populated dynamically -->
+        </div>
+      </div>
+    </section>
+     
+    <section class="product-tabs">
+      <div class="container">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="description">Description</button>
+          <button class="tab-btn" data-tab="reviews">Reviews</button>
+        </div>
+        <div class="tab-content active" id="description">
+          <h3>Product Details</h3>
+          <p id="productDescription"></p>
+          <h3>How to Use</h3>
+          <ul id="howToUse">
+            <!-- How to use will be populated dynamically if available -->
+          </ul>
+        </div>
+        <div class="tab-content" id="reviews">
+          <div class="reviews-summary" id="reviewsSummary">
+            <!-- Reviews summary will be populated dynamically -->
+          </div>
+          <div id="reviewsList">
+            <!-- Reviews will be populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-products">
+      <div class="container">
+        <div class="section-header">
+          <h2>Featured Products</h2>
+          <a href="/products" class="view-all">View all 
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 4L14 10L8 16" stroke="#D5D6CF" stroke-width="2"/>
+            </svg>
+          </a>
+        </div>
+        <div class="product-grid" id="featuredProducts">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-left">
+        <img src="../../images/logo.png" alt="Logo" class="footer-logo">
+        <nav>
+          <a href="/products">Sản phẩm</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <p>Copyright © 2021 Company Name</p>
+    </div>
+  </footer>
+  <script src="../../assets/js/detail.js"></script>
+  <script src="../../assets/js/add.js"></script>
+</body>
+</html>
