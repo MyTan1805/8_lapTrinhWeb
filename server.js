@@ -608,7 +608,6 @@ app.delete('/dishes/:id', async (req, res) => {
     }
 });
 
-
 // Khởi động server
 connectDB()
     .then(() => {
